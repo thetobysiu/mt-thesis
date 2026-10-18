@@ -1,0 +1,38 @@
+{
+  "name": "mt-thesis",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Magic Tower AI Lab · Thesis: the evidence, process and replays behind the master's thesis.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev -p 3100",
+    "build": "next build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "data": "tsx scripts/build-data.ts"
+  },
+  "dependencies": {
+    "@fontsource/fira-code": "^5.3.0",
+    "@fontsource/fira-sans": "^5.3.0",
+    "@vercel/analytics": "^2.0.1",
+    "next": "16.3.6",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "^24",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "16.3.6",
+    "tailwindcss": "4.3.3",
+    "tsx": "^4",
+    "typescript": "^5",
+    "vitest": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

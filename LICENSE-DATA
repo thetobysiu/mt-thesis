@@ -1,0 +1,18 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Copyright (c) 2026 King Wai Siu
+
+The following parts of this repository are licensed under CC BY 4.0:
+
+  - public/data/        result files, indexes and the compacted run logs of the thesis experiments
+                        (generated from https://github.com/thetobysiu/mt-ai-lab, also CC BY 4.0)
+  - the texts of the site (page copy, GLOSSARY.md, docs/)
+
+You may share and adapt this material for any purpose, including commercially, provided
+you give appropriate credit (cite the thesis), provide a link to the licence, and indicate
+if changes were made.
+
+Full licence text: https://creativecommons.org/licenses/by/4.0/legalcode
+
+Material from third parties (for example the game tiles in public/sprites) keeps its own
+licence; see THIRD_PARTY.md.
