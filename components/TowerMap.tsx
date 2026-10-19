@@ -36,7 +36,7 @@ export function TowerFloorMap({ floor, tiles, hero, options }:
           <option value="hp">(show the monster&apos;s own HP instead)</option>
         </select>
       </label>
-      <div className="flex-1 min-h-[420px]">
+      <div className="h-[clamp(420px,70vh,720px)] shrink-0">
         <FloorMap map={map} hero={start} stats={stats} fit maxCell={48} skin="game" enemyMetric={pick === "hp" ? "hp" : "dmg"} />
       </div>
       <MapLegend enemyMetric={pick === "hp" ? "hp" : "dmg"} />

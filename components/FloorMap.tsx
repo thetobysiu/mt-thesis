@@ -136,13 +136,10 @@ export function FloorMap({ map, hero, stats, removed, target, path, cell = 28, f
   useLayoutEffect(() => {
     if (!fit || !boxRef.current) return;
     const el = boxRef.current;
-    // Height comes from the viewport, not the box: the box is stretched by sibling panels, which made the scale jump.
-    const measure = () => setBox({ w: el.clientWidth, h: Math.round(window.innerHeight * 0.7) });
-    const ro = new ResizeObserver(measure);
+    const ro = new ResizeObserver(() => setBox({ w: el.clientWidth, h: el.clientHeight }));
     ro.observe(el);
-    window.addEventListener("resize", measure);
-    measure();
-    return () => { ro.disconnect(); window.removeEventListener("resize", measure); };
+    setBox({ w: el.clientWidth, h: el.clientHeight });
+    return () => ro.disconnect();
   }, [fit]);
 
   if (!map) return <div ref={boxRef} className="muted p-4 w-full h-full flex items-center justify-center" data-testid="map-empty">No map</div>;
@@ -242,7 +239,7 @@ export function FloorMap({ map, hero, stats, removed, target, path, cell = 28, f
   );
 
   if (!fit) return inner;
-  return <div ref={boxRef} className="mapwrap w-full h-full" style={{ minHeight: box ? h * size + 30 : undefined }}>{inner}</div>;
+  return <div ref={boxRef} className="mapwrap w-full h-full">{inner}</div>;
 }
 
 export function MapLegend({ enemyMetric = "dmg", skin = "game" }: { enemyMetric?: "dmg" | "hp"; skin?: MapSkin }) {

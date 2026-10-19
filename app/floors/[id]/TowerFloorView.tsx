@@ -44,7 +44,7 @@ export function TowerFloorView({ id }: { id: string }) {
         <div className="kpi"><span className="v">{f.width} × {f.height}</span><span className="k">tiles</span></div>
       </div>
 
-      <div className="grid gap-[var(--gap)] xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <div className="grid gap-[var(--gap)] xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] xl:items-start">
         <section className="widget min-h-[560px]">
           <header><span className="w-title">Map</span><span className="w-actions muted">hover a tile for its stats</span></header>
           <div className="body flex-1 flex flex-col">

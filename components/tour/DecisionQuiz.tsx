@@ -54,10 +54,10 @@ export function DecisionQuiz({ text, replayHref }: { text: string; replayHref: s
   const describe = (a: Action) => a.type === "fight" ? `${a.damage} HP` : a.type === "door" ? "uses a yellow key" : "";
 
   return (
-    <div className="grid gap-[var(--gap)] lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)]" data-testid="decision-quiz">
+    <div className="grid gap-[var(--gap)] lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:items-start" data-testid="decision-quiz">
       <div className="panel p-3 min-h-[360px] flex flex-col gap-2">
         <div className="text-[13px] mono muted">HP {h.hp} · ATK {h.atk} · DEF {h.def} · yellow keys {h.yellow} · at ({h.x},{h.y})</div>
-        <div className="flex-1 min-h-[320px]">
+        <div className="h-[clamp(320px,65vh,640px)] shrink-0">
           <FloorMap map={map} hero={heroOf(state)} removed={state.removed} fit minCell={18} maxCell={52}
                     highlight={highlight} labels={labels} onCellClick={onCell} skin={skin} />
         </div>

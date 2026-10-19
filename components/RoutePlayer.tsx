@@ -48,7 +48,7 @@ export function RoutePlayer({ id, text, solution }: { id: string; text: string; 
   const decisions = steps.filter((s) => s.kind === "decision").length;
 
   return (
-    <div className="grid gap-[var(--gap)] lg:grid-cols-[minmax(0,1fr)_380px]">
+    <div className="grid gap-[var(--gap)] lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
       <Widget title="Route on the map" className="min-h-[560px]" bodyClass="flex-1 min-h-0 flex flex-col gap-2"
               actions={<div className="tabs" role="tablist" aria-label="solver">
                 <button role="tab" aria-selected={mode === "exact"} className="btn btn-sm" onClick={() => { setMode("exact"); setIdx(0); }}>exact solver</button>
@@ -60,7 +60,7 @@ export function RoutePlayer({ id, text, solution }: { id: string; text: string; 
           <Stat label="Keys" value={hero ? `${hero.keys.yellow} / ${hero.keys.blue} / ${hero.keys.red}` : "–"} sub="yellow / blue / red" />
           <Stat label="Step" value={`${at} / ${last}`} sub={`${decisions} decisions`} />
         </div>
-        <div className="flex-1 min-h-[360px]">
+        <div className="h-[clamp(360px,70vh,720px)] shrink-0">
           <FloorMap map={map} hero={hero} removed={removed} path={step?.tiles.map((t) => [t.x, t.y]) ?? null} fit minCell={14} maxCell={60} />
         </div>
         <div className="flex flex-wrap items-center gap-1">

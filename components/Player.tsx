@@ -31,6 +31,7 @@ function withAssists(s: GameState, on: boolean): { state: GameState; log: Entry[
 }
 
 const valueKey = (s: GameState) => stateText(s.floor.text, s.floor.height, s.hero, s.removed);
+const lethal = (a: Action) => a.type === "fight" && !a.canWin;
 
 export function Player({ id, text, optimum, title }: { id: string; text: string; optimum: number | null; title: string }) {
   const floor = useMemo(() => parseFloor(id, text), [id, text]);
@@ -81,6 +82,7 @@ export function Player({ id, text, optimum, title }: { id: string; text: string;
   }, [hints, state, outcomes, values]);
 
   const take = (a: Action) => {
+    if (lethal(a)) return;
     const next = state.clone();
     next.apply(a);
     const { log } = withAssists(next, assists);
@@ -98,17 +100,18 @@ export function Player({ id, text, optimum, title }: { id: string; text: string;
     return [{ state: s0, label: "Start", assisted: false, hp: s0.hero.hp }, ...log];
   });
 
-  const highlight = useMemo(() => new Set(actions.map((a) => posKey(a.x, a.y))), [actions]);
-  const labels = useMemo(() => Object.fromEntries(actions.map((a) => [posKey(a.x, a.y), String(a.id)])), [actions]);
+  const playable = useMemo(() => actions.filter((a) => !lethal(a)), [actions]);
+  const highlight = useMemo(() => new Set(playable.map((a) => posKey(a.x, a.y))), [playable]);
+  const labels = useMemo(() => Object.fromEntries(playable.map((a) => [posKey(a.x, a.y), String(a.id)])), [playable]);
   const onCell = (x: number, y: number) => {
-    const a = actions.find((v) => v.x === x && v.y === y);
+    const a = playable.find((v) => v.x === x && v.y === y);
     if (a) take(a);
   };
   const current = hints ? valueOf(state) : undefined;
   const h = state.hero;
 
   return (
-    <div className="grid gap-[var(--gap)] xl:grid-cols-[minmax(0,1fr)_440px]">
+    <div className="grid gap-[var(--gap)] xl:grid-cols-[minmax(0,1fr)_440px] xl:items-start">
       <Widget title={title} className="min-h-[620px]" bodyClass="flex-1 min-h-0 flex flex-col gap-2"
               actions={<>
                 <label className="flex items-center gap-1 text-[13px]"><input type="checkbox" checked={assists} onChange={(e) => setAssists(e.target.checked)} /> engine assists</label>
@@ -123,7 +126,7 @@ export function Player({ id, text, optimum, title }: { id: string; text: string;
           <Stat label="Keys" value={`${h.yellow} / ${h.blue} / ${h.red}`} sub="yellow / blue / red" />
           <Stat label="Turn" value={state.turn} sub={`optimum ${optimum ?? "–"} HP`} />
         </div>
-        <div className="flex-1 min-h-[380px]">
+        <div className="h-[clamp(380px,70vh,720px)] shrink-0">
           <FloorMap map={map} hero={heroOf(state)} removed={state.removed} fit minCell={16} maxCell={64}
                     highlight={highlight} labels={labels} onCellClick={onCell} skin={skin} />
         </div>
@@ -150,7 +153,8 @@ export function Player({ id, text, optimum, title }: { id: string; text: string;
               const v = hints ? valueOf(outcomes[i]) : undefined;
               const cls = v === undefined ? "" : v == null ? "text-[var(--bad)]" : current != null && v < current ? "text-[var(--warn)]" : "text-[var(--ok)]";
               return (
-                <button key={a.id} type="button" className="step w-full text-left" onClick={() => take(a)}>
+                <button key={a.id} type="button" className="step w-full text-left disabled:opacity-60 disabled:cursor-not-allowed" onClick={() => take(a)}
+                        disabled={lethal(a)} title={lethal(a) ? "This fight would kill the hero" : undefined}>
                   <span className="n">{a.id}</span>
                   <span className="flex-1 min-w-0">
                     <span className="block truncate">{a.type === "fight" ? `Fight ${a.name} (${a.x},${a.y})` : a.type === "door" ? `Open ${a.door} door (${a.x},${a.y})` : a.type === "collect" ? `Collect ${a.name} (${a.x},${a.y})` : a.label}</span>
