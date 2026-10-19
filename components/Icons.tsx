@@ -11,6 +11,7 @@ export const IconStop = (p: P) => <svg {...base(p)}><rect x="5" y="5" width="14"
 export const IconFlask = (p: P) => <svg {...base(p)}><path d="M9 3h6" /><path d="M10 3v6.5L4.5 19a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 9.5V3" /></svg>;
 export const IconDna = (p: P) => <svg {...base(p)}><path d="M4 4c4 4 12 4 16 0" /><path d="M4 20c4-4 12-4 16 0" /><path d="M6 8c3 2 9 2 12 0" /><path d="M6 16c3-2 9-2 12 0" /><path d="M12 6v12" /></svg>;
 export const IconFile = (p: P) => <svg {...base(p)}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="8" y1="13" x2="16" y2="13" /><line x1="8" y1="17" x2="14" y2="17" /></svg>;
+export const IconCompare = (p: P) => <svg {...base(p)}><rect x="3" y="4" width="7" height="16" rx="1.5" /><rect x="14" y="4" width="7" height="16" rx="1.5" /><path d="M12 2v20" strokeDasharray="2 2" /></svg>;
 export const IconChart = (p: P) => <svg {...base(p)}><line x1="4" y1="20" x2="20" y2="20" /><rect x="6" y="10" width="3" height="8" /><rect x="11" y="5" width="3" height="13" /><rect x="16" y="13" width="3" height="5" /></svg>;
 export const IconBox = (p: P) => <svg {...base(p)}><path d="M21 8l-9-5-9 5v8l9 5 9-5z" /><path d="M3 8l9 5 9-5" /><path d="M12 13v8" /></svg>;
 export const IconMap = (p: P) => <svg {...base(p)}><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" /><line x1="8" y1="2" x2="8" y2="18" /><line x1="16" y1="6" x2="16" y2="22" /></svg>;

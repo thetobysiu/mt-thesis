@@ -165,3 +165,10 @@ export function replay(events: RunEvent[], result?: RunEvent | null): RunState {
   if (!s.result && result) s.result = result;
   return s;
 }
+
+/** First snapshot index at which two runs act differently (null: identical; the shorter length if one stops early). */
+export function firstDifference(a: RunState, b: RunState): number | null {
+  const n = Math.min(a.snapshots.length, b.snapshots.length);
+  for (let i = 1; i < n; i++) if (a.snapshots[i].action !== b.snapshots[i].action || a.snapshots[i].floorId !== b.snapshots[i].floorId) return i;
+  return a.snapshots.length === b.snapshots.length ? null : n;
+}

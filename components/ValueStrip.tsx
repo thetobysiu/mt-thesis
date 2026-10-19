@@ -6,15 +6,13 @@ import type { EpisodeValues } from "@/lib/data-types";
 import { parseFloor } from "@/lib/engine/floor";
 import { startDifference } from "@/lib/engine/match";
 import { GameState } from "@/lib/engine/state";
+import { HEAVY } from "@/lib/floors";
 import { stateText } from "@/lib/solver/solver";
 import { stateValues } from "@/lib/solver/client";
 import type { RunLog } from "@/lib/types";
 
 export type TurnValue = { turn: number; value: number | null };
 type Status = { kind: "idle" | "loading" | "computing" | "ready" | "unavailable" | "slow"; note?: string };
-
-// searching these floors takes minutes and a lot of memory: only precomputed values are shown
-export const HEAVY_FLOORS = new Set(["complex", "hand03"]);
 
 export function useEpisodeValues(id: string, floor: string | null, log: RunLog) {
   const [values, setValues] = useState<TurnValue[] | null>(null);
@@ -27,7 +25,7 @@ export function useEpisodeValues(id: string, floor: string | null, log: RunLog) 
       const pre = await fetch(`/data/values/${encodeURIComponent(id)}.json`).then((r) => (r.ok ? (r.json() as Promise<EpisodeValues>) : null)).catch(() => null);
       if (!live) return;
       if (pre) { setValues(pre.values); setStatus({ kind: "ready" }); return; }
-      if (HEAVY_FLOORS.has(floor)) { setStatus({ kind: "slow" }); return; }
+      if (HEAVY.has(floor)) { setStatus({ kind: "slow" }); return; }
       const text = await fetch(`/data/floors/${floor}.txt`).then((r) => (r.ok ? r.text() : null));
       if (!live) return;
       if (!text) { setStatus({ kind: "unavailable", note: "floor file missing" }); return; }

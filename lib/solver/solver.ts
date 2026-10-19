@@ -310,49 +310,67 @@ export type SearchEvent = { kind: "pop" | "skip" | "push" | "stop" | "prune"; st
 
 const order = (a: SolverState, b: SolverState) => (a.cnt === b.cnt ? b.score - a.score : a.cnt - b.cnt);
 
-/** Graph.runSummary (exact) or Graph.run (published). `onEvent` lets the solver page step through the search. */
-export function solve(graph: Graph, mode: "exact" | "published", onEvent?: (e: SearchEvent) => void, limit = Infinity): SolveResult {
-  const queue = new JavaPriorityQueue<SolverState>(order);
-  queue.offer(SolverState.initial(graph));
-  const seen = new Map<string | number, number>();      // best HP pushed per set
-  const expanded = new Map<string | number, number>();  // exact: best HP expanded per set
-  const popped = new Set<string | number>();            // published: first pop per set
-  const winSets = new Map<string | number, number>();
-  let best: SolverState | null = null;
-  let index = 0;
-  while (queue.size && index < limit) {
-    const state = queue.poll()!;
+/** Graph.runSummary (exact) or Graph.run (published), resumable: `poll()` handles one state taken from the queue. */
+export class Search {
+  readonly queue = new JavaPriorityQueue<SolverState>(order);
+  readonly seen = new Map<string | number, number>();      // best HP pushed per set
+  readonly expanded = new Map<string | number, number>();  // exact: best HP expanded per set
+  readonly popped = new Set<string | number>();            // published: first pop per set
+  readonly winSets = new Map<string | number, number>();
+  best: SolverState | null = null;
+  index = 0;   // expanded states (Java's counter)
+  polls = 0;   // states taken from the queue, skipped ones included
+
+  constructor(readonly graph: Graph, readonly mode: "exact" | "published") {
+    this.queue.offer(SolverState.initial(graph));
+  }
+
+  get done() { return this.queue.size === 0; }
+
+  poll(onEvent?: (e: SearchEvent) => void): void {
+    const state = this.queue.poll();
+    if (!state) return;
+    this.polls++;
     const key = state.key();
-    if (mode === "exact") {
-      const done = expanded.get(key);
-      if (done != null && done >= state.score) { onEvent?.({ kind: "skip", state }); continue; }
-      expanded.set(key, state.score);
+    if (this.mode === "exact") {
+      const done = this.expanded.get(key);
+      if (done != null && done >= state.score) { onEvent?.({ kind: "skip", state }); return; }
+      this.expanded.set(key, state.score);
     } else {
-      if (popped.has(key)) { onEvent?.({ kind: "skip", state }); continue; }
-      popped.add(key);
+      if (this.popped.has(key)) { onEvent?.({ kind: "skip", state }); return; }
+      this.popped.add(key);
     }
     onEvent?.({ kind: "pop", state });
     if (state.shouldStop()) {
       onEvent?.({ kind: "stop", state });
-      const counts = mode === "published" || state.bossDead;
-      if (state.bossDead) winSets.set(key, Math.max(winSets.get(key) ?? -Infinity, state.score));
-      if (counts && (best == null || best.score < state.score)) best = state;
-      continue;
+      const counts = this.mode === "published" || state.bossDead;
+      if (state.bossDead) this.winSets.set(key, Math.max(this.winSets.get(key) ?? -Infinity, state.score));
+      if (counts && (this.best == null || this.best.score < state.score)) this.best = state;
+      return;
     }
     for (const node of state.current.linked) {
       if (state.visited[node.id]) continue;
       const another = state.copy().take(node);
       if (!another) continue;
       const k = another.key();
-      if ((seen.get(k) ?? -1) > another.score) { onEvent?.({ kind: "prune", state: another, node }); continue; }
-      seen.set(k, another.score);
-      queue.offer(another);
+      if ((this.seen.get(k) ?? -1) > another.score) { onEvent?.({ kind: "prune", state: another, node }); continue; }
+      this.seen.set(k, another.score);
+      this.queue.offer(another);
       onEvent?.({ kind: "push", state: another, node });
     }
-    index++;
+    this.index++;
   }
-  const won = best?.bossDead ?? false;
-  return { solvable: won, hp: best ? best.score : null, best, states: index, winningSets: winSets.size, decisions: best ? best.cnt : null };
+
+  result(): SolveResult {
+    const b = this.best;
+    return { solvable: b?.bossDead ?? false, hp: b ? b.score : null, best: b, states: this.index, winningSets: this.winSets.size, decisions: b ? b.cnt : null };
+  }
+}
+
+export function solve(graph: Graph, mode: "exact" | "published", onEvent?: (e: SearchEvent) => void, limit = Infinity): SolveResult {
+  const s = new Search(graph, mode);
+  while (!s.done && s.index < limit) s.poll(onEvent);
+  return s.result();
 }
 
 /** The floor text with a mid-game state: cleared tiles emptied and the hero line replaced (floor_lab.state_txt). */

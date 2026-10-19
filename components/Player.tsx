@@ -10,7 +10,7 @@ import { floorMapData, heroOf } from "@/lib/engine/mapdata";
 import { GameState, posKey, type Action } from "@/lib/engine/state";
 import { stateText } from "@/lib/solver/solver";
 import { stateValues } from "@/lib/solver/client";
-import { HEAVY_FLOORS } from "./ValueStrip";
+import { HEAVY } from "@/lib/floors";
 
 type Entry = { state: GameState; label: string; assisted: boolean; hp: number };
 
@@ -37,7 +37,7 @@ export function Player({ id, text, optimum, title }: { id: string; text: string;
   const map = useMemo(() => floorMapData(floor), [floor]);
   const [assists, setAssists] = useState(true);
   const [hintsOn, setHints] = useState(false);
-  const heavy = HEAVY_FLOORS.has(id);
+  const heavy = HEAVY.has(id);
   const hints = hintsOn && !heavy;
   const [skin, setSkin] = useMapSkin();
   const [history, setHistory] = useState<Entry[]>(() => {

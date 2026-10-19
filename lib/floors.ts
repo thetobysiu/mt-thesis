@@ -1,6 +1,9 @@
 // What each single floor is, in the thesis's words (Chapter 4 and Appendix B).
 import type { FloorEntry } from "./data-types";
 
+/** Floors whose exact search takes minutes and much memory: never searched in the browser. */
+export const HEAVY = new Set(["complex", "hand03"]);
+
 export function floorTitle(id: string): string {
   if (id === "simple") return "Simple floor";
   if (id === "complex") return "Complex floor";

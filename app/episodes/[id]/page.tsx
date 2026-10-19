@@ -23,6 +23,10 @@ export default async function EpisodePage({ params }: Params) {
   const { id } = await params;
   const e = getEpisode(id);
   if (!e) notFound();
+  // a partner from the same cell, preferably with the other outcome, for the side-by-side comparison
+  const cellLabel = e.cells[0]?.label;
+  const mates = !e.tower && cellLabel ? getEpisodes().episodes.filter((x) => x.id !== e.id && x.floor === e.floor && x.cells.some((c) => c.label === cellLabel)) : [];
+  const partner = mates.find((x) => !!x.success !== !!e.success) ?? mates[0];
   return (
     <div className="page page-wide">
       <section className="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -42,6 +46,7 @@ export default async function EpisodePage({ params }: Params) {
             </span>
           ))}</> : null}
           {" · "}<a className="link" href={`/data/episodes/${e.id}.json.gz`} download>log (gzipped JSON)</a>
+          {partner && <>{" · "}<Link className="link" href={`/compare/?a=${e.id}&b=${partner.id}`}>compare with another episode of this cell</Link></>}
         </span>
       </section>
       <EpisodeViewer id={e.id} floor={getFloors().some((f) => f.id === e.floor) ? e.floor : null} />

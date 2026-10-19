@@ -22,11 +22,10 @@ export const NAV: { group: string | null; items: NavItem[] }[] = [
   ] },
   { group: "Evidence", items: [
     { href: "/results/", label: "Results", icon: "table", ready: true },
-    { href: "/episodes/", label: "Episodes", icon: "replay", ready: true },
-  ] },
+    { href: "/episodes/", label: "Episodes", icon: "replay", ready: true },      { href: "/compare/", label: "Compare", icon: "compare", ready: true },  ] },
   { group: "Explore", items: [
     { href: "/floors/", label: "Floors", icon: "map", ready: true },
-    { href: "/solver/", label: "Exact solver", icon: "target", ready: false },
+    { href: "/solver/", label: "Exact solver", icon: "target", ready: true },
     { href: "/prompt-optimisation/", label: "Prompt optimisation", icon: "dna", ready: false },
     { href: "/tower/", label: "Tower", icon: "tower", ready: false },
   ] },
