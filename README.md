@@ -75,7 +75,7 @@ MT_THESIS=<thesis folder with chapters_v2/, chapters/bibliography.md, graphs/, f
 ```
 
 The original game under `public/game/24/` is a copy of the 24-floor tower's runtime (no editor, saves or docs),
-plus `play.html` and `en.js` (English text, direct start on MT0).
+plus `play/index.html` and `en.js` (English text, direct start on MT0).
 
 ## Layout
 

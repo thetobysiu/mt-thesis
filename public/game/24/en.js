@@ -1,5 +1,5 @@
 /* English layer for the 24-floor Magic Tower (ckcz123/mota-js 2.10.3), written for the mt-thesis site.
-   play.html loads it after main.js and calls window.mtEnglish() once the game has loaded: the game data (items,
+   play/index.html loads it after main.js and calls window.mtEnglish() once the game has loaded: the game data (items,
    monsters, floors, shops, special abilities) is translated in place, the text-drawing functions translate what
    they draw, and a new game starts on MT0 without the title screen, the opening and the mode choice (express mode). */
 (function () {

@@ -11,7 +11,7 @@ const PAGES: [string, string][] = [
   ["/prompt-optimisation/", "The loop"], ["/prompt-optimisation/gs2_dsv4flash_bare/", "Candidate"], ["/tower/", "Tower Game"],
   ["/thesis/", "Cite"], ["/thesis/experiments/", "Table 6.5"], ["/glossary/", "Exact solver"], ["/about/", "Privacy notice"],
 ];
-const FILES = ["/game/24/index.html", "/game/24/play.html", "/game/24/en.js", "/game/24/main.js", "/thesis/thesis.pdf", "/data/episodes.json", "/data/index.json",
+const FILES = ["/game/24/", "/game/24/play/", "/game/24/en.js", "/game/24/main.js", "/thesis/thesis.pdf", "/data/episodes.json", "/data/index.json",
                "/robots.txt", "/sitemap.xml"];
 
 const fileFor = (url: string) => {
@@ -40,10 +40,12 @@ for (const f of htmlFiles(OUT)) {
   if (f.startsWith(path.join(OUT, "game"))) continue;
   pages++;
   const html = fs.readFileSync(f, "utf8");
-  for (const m of html.matchAll(/href="(\/[^"#?]*)[^"]*"/g)) {
+  for (const m of html.matchAll(/(?:href|src)="(\/[^"#?]*)[^"]*"/g)) {
     const url = m[1];
     if (url.startsWith("/_next/") || url.startsWith("/_vercel/")) continue;
     links++;
+    // Vercel serves exported .html files only at extension-less URLs
+    if (url.endsWith(".html")) errors.push(`${path.relative(OUT, f)}: link to ${url} (404 on Vercel; link the directory)`);
     if (!seen.has(url)) seen.set(url, fs.existsSync(fileFor(url)));
     if (!seen.get(url)) errors.push(`${path.relative(OUT, f)}: broken link ${url}`);
   }
