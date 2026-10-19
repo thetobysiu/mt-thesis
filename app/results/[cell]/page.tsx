@@ -40,7 +40,7 @@ export default async function CellPage({ params }: Params) {
   return (
     <div className="page">
       <section className="flex flex-col gap-2">
-        <p className="muted text-[12px]"><Link className="link" href="/results/">Results</Link> / cell</p>
+        <span className="eyebrow">Cell{c.thesis ? " · cited by the thesis" : ""}</span>
         <h1 className="break-all">{c.label}</h1>
         <p className="lead">
           {modelName(c.model)} on {where}, {c.n} {c.tower ? "run" : "episode"}{c.n === 1 ? "" : "s"}.{" "}

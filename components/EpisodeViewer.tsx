@@ -88,9 +88,16 @@ function Viewer({ run, log }: { run: RunState; log: RunLog }) {
   }, [idx, tab]);
 
   const seek = useCallback((i: number) => { setPlaying(false); setPinnedFloor(null); setIdx(Math.max(0, Math.min(last, i))); }, [last]);
+  const decisionIdx = useMemo(() => run.cards.filter((c) => c.kind === "turn" && !c.event.forced && c.snapIdx != null).map((c) => c.snapIdx!), [run.cards]);
+  const jumpDecision = (dir: 1 | -1) => {
+    const next = dir > 0 ? decisionIdx.find((i) => i > idx) : [...decisionIdx].reverse().find((i) => i < idx);
+    if (next != null) seek(next);
+  };
   const onKey = (e: React.KeyboardEvent) => {
     if ((e.target as HTMLElement).tagName.match(/INPUT|TEXTAREA|SELECT/)) return;
-    if (e.key === "ArrowLeft") { seek(idx - 1); e.preventDefault(); }
+    if (e.key === "ArrowLeft" && e.shiftKey) { jumpDecision(-1); e.preventDefault(); }
+    else if (e.key === "ArrowRight" && e.shiftKey) { jumpDecision(1); e.preventDefault(); }
+    else if (e.key === "ArrowLeft") { seek(idx - 1); e.preventDefault(); }
     else if (e.key === "ArrowRight") { seek(idx + 1); e.preventDefault(); }
     else if (e.key === "Home") { seek(0); e.preventDefault(); }
     else if (e.key === "End") { seek(last); e.preventDefault(); }
@@ -153,8 +160,8 @@ function Viewer({ run, log }: { run: RunState; log: RunLog }) {
                 ) : null}
                 actions={<>
                   <select className="input" value={mapWhen} onChange={(e) => setMapWhen(e.target.value as "after" | "before")} aria-label="map moment">
-                    <option value="after">map after this turn</option>
-                    <option value="before">map before it (as the model saw it)</option>
+                    <option value="after">map: after the turn</option>
+                    <option value="before">map: before (as the model saw it)</option>
                   </select>
                   <select className="input" value={enemyMetric} onChange={(e) => setEnemyMetric(e.target.value as "dmg" | "hp")} aria-label="number on monsters">
                     <option value="dmg">monsters: HP cost</option>
@@ -167,7 +174,7 @@ function Viewer({ run, log }: { run: RunState; log: RunLog }) {
                       target={onHeroFloor ? snap?.target ?? null : null} path={onHeroFloor ? snap?.path ?? null : null}
                       focus={focus} fit minCell={12} maxCell={64} enemyMetric={enemyMetric} skin={skin} />
           </div>
-          <div className="flex items-center gap-1 shrink-0" data-testid="transport">
+          <div className="flex flex-wrap items-center gap-1 shrink-0" data-testid="transport">
             <button className="btn btn-sm" onClick={() => seek(0)} title="Start (Home)" aria-label="start"><IconSkipStart /></button>
             <button className="btn btn-sm" onClick={() => seek(idx - 1)} title="Previous turn (←)" aria-label="previous turn"><IconPrev /></button>
             <button className="btn btn-sm btn-primary" onClick={() => setPlaying((v) => !v)} title="Play (Space)" aria-label={playing ? "pause" : "play"}>
@@ -175,14 +182,17 @@ function Viewer({ run, log }: { run: RunState; log: RunLog }) {
             </button>
             <button className="btn btn-sm" onClick={() => seek(idx + 1)} title="Next turn (→)" aria-label="next turn"><IconNext /></button>
             <button className="btn btn-sm" onClick={() => seek(last)} title="End (End)" aria-label="end"><IconSkipEnd /></button>
-            <input type="range" min={0} max={last} value={idx} onChange={(e) => seek(Number(e.target.value))} className="flex-1 mx-2" aria-label="turn" />
+            <span className="w-2" />
+            <button className="btn btn-sm" onClick={() => jumpDecision(-1)} title="Previous model decision (Shift+←)">← decision</button>
+            <button className="btn btn-sm" onClick={() => jumpDecision(1)} title="Next model decision (Shift+→)">decision →</button>
+            <input type="range" min={0} max={last} value={idx} onChange={(e) => seek(Number(e.target.value))} className="flex-1 min-w-[140px] mx-2" aria-label="turn" />
             <select className="input" value={speed} onChange={(e) => setSpeed(Number(e.target.value))} aria-label="replay speed">
               {[1, 2, 4, 8].map((s) => <option key={s} value={s}>{s} turn/s</option>)}
             </select>
           </div>
           <div className="flex flex-wrap items-center gap-2 shrink-0">
             <MapLegend enemyMetric={enemyMetric} skin={skin} />
-            <span className="muted text-[11px] ml-auto">← → step · Space play · hover a coordinate in the text to find it on the map</span>
+            <span className="muted text-[12px] ml-auto">← → turn · Shift+← → decision · Space play · hover a coordinate in the text to find it on the map</span>
           </div>
         </Widget>
       </div>
@@ -197,26 +207,26 @@ function Viewer({ run, log }: { run: RunState; log: RunLog }) {
                 </div>}>
           <div className="p-3 flex flex-col gap-2" ref={textRef}>
             {idx > 0 && (
-              <div className="text-[13px]" data-testid="executed">
+              <div className="text-[15px]" data-testid="executed">
                 <b>{snap?.action}</b>
                 {dHp !== 0 && <span className={dHp < 0 ? "text-[var(--bad)]" : "text-[var(--ok)]"}> {dHp > 0 ? "+" : ""}{dHp} HP</span>}
                 {ev?.corrected_from != null && (
-                  <div className="muted text-[12px]">The model chose action {ev.corrected_from}{ev.corrected_from_label ? ` (${ev.corrected_from_label})` : ""}; the engine replaced it ({ev.corrected_reason ?? "mechanical override"}).</div>
+                  <div className="muted text-[13px]">The model chose action {ev.corrected_from}{ev.corrected_from_label ? ` (${ev.corrected_from_label})` : ""}; the engine replaced it ({ev.corrected_reason ?? "mechanical override"}).</div>
                 )}
-                {ev && isReplayed(ev) ? <div className="muted text-[12px]">Replayed: the stored run&apos;s own turn, repeated up to the point where this run was resumed ({ev.forced_reason}).</div>
-                  : ev?.forced && <div className="muted text-[12px]">Assisted turn: the engine acted without asking the model{ev.forced_reason ? ` (${ev.forced_reason})` : ""}.</div>}
-                {card?.planNote && <div className="text-[12px] text-[var(--info)]">plan memory: {card.planNote}</div>}
+                {ev && isReplayed(ev) ? <div className="muted text-[13px]">Replayed: the stored run&apos;s own turn, repeated up to the point where this run was resumed ({ev.forced_reason}).</div>
+                  : ev?.forced && <div className="muted text-[13px]">Assisted turn: the engine acted without asking the model{ev.forced_reason ? ` (${ev.forced_reason})` : ""}.</div>}
+                {card?.planNote && <div className="text-[13px] text-[var(--info)]">plan memory: {card.planNote}</div>}
               </div>
             )}
             {notes.map((n) => (
-              <div key={n.key} className="text-[12px] text-[var(--warn)]">{n.kind.replace("_", " ")}: {String(n.event.reason ?? n.event.message ?? "")}
+              <div key={n.key} className="text-[13px] text-[var(--warn)]">{n.kind.replace("_", " ")}: {String(n.event.reason ?? n.event.message ?? "")}
                 {n.event.repaired_id != null ? ` → repaired to action ${n.event.repaired_id}` : ""}</div>
             ))}
             <TurnText tab={tab} card={card} idx={idx} log={log} run={run} chosen={modelChoice} search={search} onCoord={setFocus} />
           </div>
         </Widget>
         <Widget title="Search the decisions" className="shrink-0"
-                actions={search ? <span className="mono text-[11px]">{hits.length} turn{hits.length === 1 ? "" : "s"}</span> : null}>
+                actions={search ? <span className="mono text-[12px]">{hits.length} turn{hits.length === 1 ? "" : "s"}</span> : null}>
           <div className="flex items-center gap-2">
             <input className="input flex-1" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="e.g. ORDER, key, Slime Lord, (7,5)"
                    aria-label="search observations and reasoning" />
@@ -230,14 +240,15 @@ function Viewer({ run, log }: { run: RunState; log: RunLog }) {
               const c = cardBySnap.get(i);
               const e = c?.event;
               return (
-                <div key={i} data-snap={i} className={`step ${i === idx ? "active" : ""}`} onClick={() => seek(i)}>
+                <button type="button" key={i} data-snap={i} className={`step w-full text-left ${i === idx ? "active" : ""}`} onClick={() => seek(i)}
+                        aria-current={i === idx ? "step" : undefined}>
                   <span className="n">{i === 0 ? "▶" : s.turn}</span>
                   <span className="flex-1 truncate">{s.action}</span>
                   {e?.corrected_from != null && <span className="tag tag-warn">override</span>}
                   {c?.kind === "turn" && (e && isReplayed(e) ? <span className="tag">replayed</span> : e?.forced ? <span className="tag">assisted</span> : <span className="tag tag-info">decision</span>)}
                   {hits.includes(i) && <span className="tag tag-warn">match</span>}
-                  <span className="mono muted text-[11px] w-12 text-right">{s.hero?.hp ?? ""}</span>
-                </div>
+                  <span className="mono muted text-[12px] w-12 text-right">{s.hero?.hp ?? ""}</span>
+                </button>
               );
             })}
           </div>

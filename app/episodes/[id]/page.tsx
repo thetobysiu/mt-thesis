@@ -25,14 +25,14 @@ export default async function EpisodePage({ params }: Params) {
   if (!e) notFound();
   return (
     <div className="page page-wide">
-      <section className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <p className="muted text-[12px] w-full"><Link className="link" href="/episodes/">Episodes</Link> / {e.tower ? "tower run" : "episode"}</p>
+      <section className="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <span className="eyebrow w-full">{e.tower ? "Tower run" : "Episode"}</span>
         <h1>{scenarioName(e.floor)} · {modelName(e.model)}</h1>
         <Outcome e={e} />
         {!e.tower && e.hpRatio != null && <span className="muted">final HP / optimum {pct(e.hpRatio)}</span>}
         <span className="muted">{e.turns} turns, {e.decisions} model decisions</span>
         {e.started && <span className="muted">{e.started.slice(0, 16).replace("T", " ")}</span>}
-        <span className="muted text-[12px]">
+        <span className="muted text-[13px]">
           {e.cells.length ? <>in {e.cells.map((c, i) => (
             <span key={`${c.file}-${c.run}`}>{i ? ", " : ""}
               {c.file.startsWith("results/reliability/")

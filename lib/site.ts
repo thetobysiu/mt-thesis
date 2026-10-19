@@ -11,7 +11,34 @@ export const SITE = {
   siteRepo: "https://github.com/thetobysiu/mt-thesis",
 };
 
-export const NAV: { href: string; label: string }[] = [
-  { href: "/results/", label: "Results" },
-  { href: "/episodes/", label: "Episodes" },
+export type NavItem = { href: string; label: string; icon: string; ready: boolean };
+
+// Pages not built yet stay visible (marked "soon") so the site's structure is clear from the start.
+export const NAV: { group: string | null; items: NavItem[] }[] = [
+  { group: null, items: [{ href: "/", label: "Start", icon: "home", ready: true }] },
+  { group: "Story", items: [
+    { href: "/tour/", label: "Guided tour", icon: "compass", ready: false },
+    { href: "/journey/", label: "Journey", icon: "route", ready: false },
+  ] },
+  { group: "Evidence", items: [
+    { href: "/results/", label: "Results", icon: "table", ready: true },
+    { href: "/episodes/", label: "Episodes", icon: "replay", ready: true },
+  ] },
+  { group: "Explore", items: [
+    { href: "/floors/", label: "Floors", icon: "map", ready: false },
+    { href: "/solver/", label: "Exact solver", icon: "target", ready: false },
+    { href: "/prompt-optimisation/", label: "Prompt optimisation", icon: "dna", ready: false },
+    { href: "/tower/", label: "Tower", icon: "tower", ready: false },
+  ] },
+  { group: "Play", items: [{ href: "/play/", label: "Play", icon: "gamepad", ready: false }] },
+  { group: "Read", items: [
+    { href: "/thesis/", label: "Thesis", icon: "book", ready: false },
+    { href: "/glossary/", label: "Glossary", icon: "file", ready: false },
+    { href: "/about/", label: "About", icon: "info", ready: false },
+  ] },
 ];
+
+/** Breadcrumb labels of the first path segment. */
+export const SECTION_LABELS: Record<string, string> = Object.fromEntries(
+  NAV.flatMap((g) => g.items).filter((i) => i.href !== "/").map((i) => [i.href.replaceAll("/", ""), i.label]),
+);
