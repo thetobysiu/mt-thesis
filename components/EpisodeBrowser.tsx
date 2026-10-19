@@ -24,7 +24,11 @@ export function EpisodeBrowser() {
   const [q, setQ] = useState("");
   const [page, setPage] = useState(0);
   useEffect(() => {
-    fetch("/data/episodes.json").then((r) => r.json() as Promise<EpisodeIndex>).then((d) => setData(d.episodes)).catch((e: unknown) => setError(String(e)));
+    fetch("/data/episodes.json").then((r) => r.json() as Promise<EpisodeIndex>).then((d) => {
+      const f = new URLSearchParams(window.location.search).get("floor");
+      if (f) setFloor(f);
+      setData(d.episodes);
+    }).catch((e: unknown) => setError(String(e)));
   }, []);
   const floors = useMemo(() => [...new Set((data ?? []).map((e) => e.floor))].sort((a, b) => floorOrder(a).localeCompare(floorOrder(b))), [data]);
   const models = useMemo(() => [...new Set((data ?? []).map((e) => modelName(e.model)))].sort(), [data]);

@@ -1,7 +1,7 @@
 // Build-time access to the generated data (server components only).
 import fs from "node:fs";
 import path from "node:path";
-import type { CellSummary, EpisodeEntry, EpisodeIndex, ResultsIndex } from "./data-types";
+import type { CellSummary, EpisodeEntry, EpisodeIndex, FloorEntry, FloorSolution, ResultsIndex } from "./data-types";
 
 const DATA = path.join(process.cwd(), "public", "data");
 let results: ResultsIndex | null = null;
@@ -23,4 +23,18 @@ export function getCell(label: string): CellSummary | undefined {
 
 export function getEpisode(id: string): EpisodeEntry | undefined {
   return getEpisodes().episodes.find((e) => e.id === id);
+}
+
+let floors: FloorEntry[] | null = null;
+export function getFloors(): FloorEntry[] {
+  floors ??= (JSON.parse(fs.readFileSync(path.join(DATA, "floors", "index.json"), "utf8")) as { floors: FloorEntry[] }).floors;
+  return floors;
+}
+
+export function getFloorText(id: string): string {
+  return fs.readFileSync(path.join(DATA, "floors", `${id}.txt`), "utf8");
+}
+
+export function getSolution(id: string): FloorSolution {
+  return JSON.parse(fs.readFileSync(path.join(DATA, "floors", `${id}.solution.json`), "utf8")) as FloorSolution;
 }

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { EpisodeViewer } from "@/components/EpisodeViewer";
 import { Outcome } from "@/components/Outcome";
-import { getEpisode, getEpisodes } from "@/lib/data";
+import { getEpisode, getEpisodes, getFloors } from "@/lib/data";
 import { modelName, pct, scenarioName } from "@/lib/format";
 
 export const dynamicParams = false;
@@ -44,7 +44,7 @@ export default async function EpisodePage({ params }: Params) {
           {" · "}<a className="link" href={`/data/episodes/${e.id}.json.gz`} download>log (gzipped JSON)</a>
         </span>
       </section>
-      <EpisodeViewer id={e.id} />
+      <EpisodeViewer id={e.id} floor={getFloors().some((f) => f.id === e.floor) ? e.floor : null} />
     </div>
   );
 }

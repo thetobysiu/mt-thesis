@@ -4,6 +4,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FloorMap, MapLegend, MapSkinSelect, useMapSkin } from "./FloorMap";
 import { Observation, Reasoning, searchRegex } from "./RichText";
+import { useEpisodeValues, ValueStrip } from "./ValueStrip";
 import { Widget, Stat } from "./Widget";
 import { IconNext, IconPause, IconPlay, IconPrev, IconSkipEnd, IconSkipStart } from "./Icons";
 import { loadEpisode } from "@/lib/episode";
@@ -17,7 +18,7 @@ function readTurnParam(): number | null {
   return t != null && /^\d+$/.test(t) ? Number(t) : null;
 }
 
-export function EpisodeViewer({ id }: { id: string }) {
+export function EpisodeViewer({ id, floor }: { id: string; floor: string | null }) {
   const [log, setLog] = useState<RunLog | null>(null);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
@@ -28,10 +29,10 @@ export function EpisodeViewer({ id }: { id: string }) {
   const run = useMemo(() => (log ? replay(log.turns, log.result) : null), [log]);
   if (error) return <div className="panel p-4 text-[var(--bad)]">Could not load this episode: {error}</div>;
   if (!run || !log) return <div className="panel p-6 muted" data-testid="viewer-loading">Loading the episode log…</div>;
-  return <Viewer run={run} log={log} />;
+  return <Viewer run={run} log={log} id={id} floor={floor} />;
 }
 
-function Viewer({ run, log }: { run: RunState; log: RunLog }) {
+function Viewer({ run, log, id, floor }: { run: RunState; log: RunLog; id: string; floor: string | null }) {
   const last = run.snapshots.length - 1;
   const [idx, setIdx] = useState(() => {
     const t = typeof window === "undefined" ? null : readTurnParam();
@@ -50,6 +51,7 @@ function Viewer({ run, log }: { run: RunState; log: RunLog }) {
   const [mapWhen, setMapWhen] = useState<"after" | "before">("after");
   const listRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
+  const valueData = useEpisodeValues(id, floor, log);
 
   const snap = run.snapshots[idx] ?? null;
   const prev = idx > 0 ? run.snapshots[idx - 1] : null;
@@ -174,6 +176,8 @@ function Viewer({ run, log }: { run: RunState; log: RunLog }) {
                       target={onHeroFloor ? snap?.target ?? null : null} path={onHeroFloor ? snap?.path ?? null : null}
                       focus={focus} fit minCell={12} maxCell={64} enemyMetric={enemyMetric} skin={skin} />
           </div>
+          {floor && <ValueStrip values={valueData.values} status={valueData.status}
+                                turnOf={(i) => run.snapshots[Math.min(i, last)]?.turn ?? 0} idx={idx} onSeek={seek} />}
           <div className="flex flex-wrap items-center gap-1 shrink-0" data-testid="transport">
             <button className="btn btn-sm" onClick={() => seek(0)} title="Start (Home)" aria-label="start"><IconSkipStart /></button>
             <button className="btn btn-sm" onClick={() => seek(idx - 1)} title="Previous turn (←)" aria-label="previous turn"><IconPrev /></button>

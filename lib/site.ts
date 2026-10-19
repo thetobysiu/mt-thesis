@@ -25,12 +25,12 @@ export const NAV: { group: string | null; items: NavItem[] }[] = [
     { href: "/episodes/", label: "Episodes", icon: "replay", ready: true },
   ] },
   { group: "Explore", items: [
-    { href: "/floors/", label: "Floors", icon: "map", ready: false },
+    { href: "/floors/", label: "Floors", icon: "map", ready: true },
     { href: "/solver/", label: "Exact solver", icon: "target", ready: false },
     { href: "/prompt-optimisation/", label: "Prompt optimisation", icon: "dna", ready: false },
     { href: "/tower/", label: "Tower", icon: "tower", ready: false },
   ] },
-  { group: "Play", items: [{ href: "/play/", label: "Play", icon: "gamepad", ready: false }] },
+  { group: "Play", items: [{ href: "/play/", label: "Play", icon: "gamepad", ready: true }] },
   { group: "Read", items: [
     { href: "/thesis/", label: "Thesis", icon: "book", ready: false },
     { href: "/glossary/", label: "Glossary", icon: "file", ready: false },

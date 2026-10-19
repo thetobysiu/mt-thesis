@@ -169,7 +169,7 @@ function summarise(id: string, log: Obj, bytes: number): EpisodeEntry {
   const res = obj(log.result);
   const details = obj(res.details);
   const hero = obj(res.hero);
-  const floor = String(log.floor_id ?? "");
+  const floor = String(log.floor_id ?? "").split(/[\\/]/).pop()!.replace(/\.txt$/, "");
   const finalHp = num(details.final_hp) ?? num(hero.hp) ?? num(obj(turns.at(-1)?.hero).hp);
   const replayed = turns.filter((t) => String(t.forced_reason ?? "").startsWith("resumed from")).map((t) => num(t.turn) ?? 0);
   return {

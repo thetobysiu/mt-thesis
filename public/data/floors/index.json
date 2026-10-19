@@ -1,0 +1,468 @@
+{
+ "generated": "2026-10-19T00:10:52.482Z",
+ "source": "mt-ai-lab tools/java_bfs",
+ "floors": [
+  {
+   "id": "simple",
+   "kind": "simple",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 13,
+    "atk": 13,
+    "def": 8,
+    "states": 412,
+    "winningSets": 1,
+    "optimalSets": 1,
+    "nodes": 23,
+    "hashed": 13,
+    "decisions": 12
+   },
+   "published": {
+    "hp": 13,
+    "states": 412
+   }
+  },
+  {
+   "id": "complex",
+   "kind": "complex",
+   "width": 13,
+   "height": 13,
+   "exact": {
+    "solvable": true,
+    "hp": 68,
+    "atk": 16,
+    "def": 20,
+    "states": 729953,
+    "winningSets": 32,
+    "optimalSets": 2,
+    "nodes": 55,
+    "hashed": 32,
+    "decisions": 20
+   },
+   "published": {
+    "hp": 22,
+    "states": 703456
+   }
+  },
+  {
+   "id": "hand01",
+   "kind": "hand",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 14,
+    "atk": 14,
+    "def": 7,
+    "states": 461,
+    "winningSets": 1,
+    "optimalSets": 1,
+    "nodes": 24,
+    "hashed": 15,
+    "decisions": 10
+   },
+   "published": {
+    "hp": 14,
+    "states": 461
+   }
+  },
+  {
+   "id": "hand02",
+   "kind": "hand",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 13,
+    "atk": 13,
+    "def": 9,
+    "states": 1539,
+    "winningSets": 1,
+    "optimalSets": 1,
+    "nodes": 27,
+    "hashed": 18,
+    "decisions": 9
+   },
+   "published": {
+    "hp": 13,
+    "states": 1307
+   }
+  },
+  {
+   "id": "hand03",
+   "kind": "hand",
+   "width": 13,
+   "height": 13,
+   "exact": {
+    "solvable": true,
+    "hp": 9,
+    "atk": 14,
+    "def": 14,
+    "states": 118351,
+    "winningSets": 1,
+    "optimalSets": 1,
+    "nodes": 34,
+    "hashed": 24,
+    "decisions": 8
+   },
+   "published": {
+    "hp": 9,
+    "states": 118351
+   }
+  },
+  {
+   "id": "hand04",
+   "kind": "hand",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 3,
+    "atk": 13,
+    "def": 8,
+    "states": 7917,
+    "winningSets": 1,
+    "optimalSets": 1,
+    "nodes": 32,
+    "hashed": 21,
+    "decisions": 12
+   },
+   "published": {
+    "hp": 3,
+    "states": 7345
+   }
+  },
+  {
+   "id": "gen01",
+   "kind": "gen",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 168,
+    "atk": 14,
+    "def": 7,
+    "states": 39,
+    "winningSets": 12,
+    "optimalSets": 1,
+    "nodes": 18,
+    "hashed": 11,
+    "decisions": 8
+   },
+   "published": {
+    "hp": 168,
+    "states": 39
+   }
+  },
+  {
+   "id": "gen02",
+   "kind": "gen",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 232,
+    "atk": 14,
+    "def": 7,
+    "states": 212,
+    "winningSets": 32,
+    "optimalSets": 1,
+    "nodes": 20,
+    "hashed": 13,
+    "decisions": 7
+   },
+   "published": {
+    "hp": 232,
+    "states": 212
+   }
+  },
+  {
+   "id": "gen03",
+   "kind": "gen",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 13,
+    "atk": 13,
+    "def": 6,
+    "states": 140,
+    "winningSets": 2,
+    "optimalSets": 1,
+    "nodes": 20,
+    "hashed": 13,
+    "decisions": 6
+   },
+   "published": {
+    "hp": 13,
+    "states": 140
+   }
+  },
+  {
+   "id": "gen04",
+   "kind": "gen",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 225,
+    "atk": 14,
+    "def": 8,
+    "states": 66,
+    "winningSets": 20,
+    "optimalSets": 1,
+    "nodes": 19,
+    "hashed": 12,
+    "decisions": 8
+   },
+   "published": {
+    "hp": 225,
+    "states": 66
+   }
+  },
+  {
+   "id": "gen05",
+   "kind": "gen",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 172,
+    "atk": 14,
+    "def": 8,
+    "states": 358,
+    "winningSets": 50,
+    "optimalSets": 1,
+    "nodes": 21,
+    "hashed": 13,
+    "decisions": 9
+   },
+   "published": {
+    "hp": 172,
+    "states": 330
+   }
+  },
+  {
+   "id": "gen06",
+   "kind": "gen",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 242,
+    "atk": 14,
+    "def": 7,
+    "states": 26,
+    "winningSets": 10,
+    "optimalSets": 5,
+    "nodes": 16,
+    "hashed": 11,
+    "decisions": 5
+   },
+   "published": {
+    "hp": 242,
+    "states": 26
+   }
+  },
+  {
+   "id": "gen07",
+   "kind": "gen",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 222,
+    "atk": 14,
+    "def": 9,
+    "states": 325,
+    "winningSets": 88,
+    "optimalSets": 6,
+    "nodes": 22,
+    "hashed": 15,
+    "decisions": 9
+   },
+   "published": {
+    "hp": 222,
+    "states": 289
+   }
+  },
+  {
+   "id": "gen08",
+   "kind": "gen",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 250,
+    "atk": 14,
+    "def": 8,
+    "states": 203,
+    "winningSets": 78,
+    "optimalSets": 1,
+    "nodes": 21,
+    "hashed": 13,
+    "decisions": 8
+   },
+   "published": {
+    "hp": 250,
+    "states": 203
+   }
+  },
+  {
+   "id": "gen09",
+   "kind": "gen",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 204,
+    "atk": 14,
+    "def": 8,
+    "states": 54,
+    "winningSets": 32,
+    "optimalSets": 1,
+    "nodes": 19,
+    "hashed": 12,
+    "decisions": 8
+   },
+   "published": {
+    "hp": 204,
+    "states": 54
+   }
+  },
+  {
+   "id": "gen10",
+   "kind": "gen",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 88,
+    "atk": 14,
+    "def": 6,
+    "states": 26,
+    "winningSets": 4,
+    "optimalSets": 1,
+    "nodes": 21,
+    "hashed": 12,
+    "decisions": 8
+   },
+   "published": {
+    "hp": 88,
+    "states": 26
+   }
+  },
+  {
+   "id": "gen11",
+   "kind": "gen",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 194,
+    "atk": 14,
+    "def": 8,
+    "states": 46,
+    "winningSets": 8,
+    "optimalSets": 1,
+    "nodes": 19,
+    "hashed": 11,
+    "decisions": 8
+   },
+   "published": {
+    "hp": 194,
+    "states": 46
+   }
+  },
+  {
+   "id": "gen12",
+   "kind": "gen",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 182,
+    "atk": 13,
+    "def": 4,
+    "states": 28,
+    "winningSets": 13,
+    "optimalSets": 1,
+    "nodes": 18,
+    "hashed": 12,
+    "decisions": 3
+   },
+   "published": {
+    "hp": 182,
+    "states": 28
+   }
+  },
+  {
+   "id": "gen13",
+   "kind": "gen",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 207,
+    "atk": 14,
+    "def": 9,
+    "states": 74,
+    "winningSets": 28,
+    "optimalSets": 1,
+    "nodes": 19,
+    "hashed": 12,
+    "decisions": 8
+   },
+   "published": {
+    "hp": 207,
+    "states": 74
+   }
+  },
+  {
+   "id": "gen14",
+   "kind": "gen",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 151,
+    "atk": 13,
+    "def": 9,
+    "states": 64,
+    "winningSets": 12,
+    "optimalSets": 1,
+    "nodes": 18,
+    "hashed": 11,
+    "decisions": 6
+   },
+   "published": {
+    "hp": 151,
+    "states": 60
+   }
+  },
+  {
+   "id": "gen15",
+   "kind": "gen",
+   "width": 11,
+   "height": 11,
+   "exact": {
+    "solvable": true,
+    "hp": 216,
+    "atk": 14,
+    "def": 9,
+    "states": 122,
+    "winningSets": 30,
+    "optimalSets": 1,
+    "nodes": 20,
+    "hashed": 12,
+    "decisions": 9
+   },
+   "published": {
+    "hp": 216,
+    "states": 122
+   }
+  }
+ ]
+}

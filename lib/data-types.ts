@@ -52,3 +52,18 @@ export type ResultsIndex = {
   cells: CellSummary[];
   catalog: { id: string; section: string; title: string; codes: string[] }[];
 };
+
+/** public/data/floors/index.json: the single floors and the Java solver's answers. */
+export type FloorEntry = {
+  id: string; kind: "simple" | "complex" | "hand" | "gen"; width: number; height: number;
+  exact: { solvable: boolean; hp: number; atk: number; def: number; states: number; winningSets: number; optimalSets: number;
+           nodes: number; hashed: number; decisions: number };
+  published: { hp: number | null; states: number | null };
+};
+
+export type RouteStepData = { kind: "start" | "decision" | "auto"; tiles: { x: number; y: number }[]; hp: number; atk: number; def: number; keys: number[] };
+export type SolutionData = { hp: number | null; solvable: boolean; states: number; winningSets: number; route: RouteStepData[] };
+/** public/data/floors/<id>.solution.json */
+export type FloorSolution = { id: string; exact: SolutionData; published: SolutionData };
+/** public/data/values/<episode>.json */
+export type EpisodeValues = { id: string; floor: string; optimum: number | null; values: { turn: number; value: number | null }[] };
