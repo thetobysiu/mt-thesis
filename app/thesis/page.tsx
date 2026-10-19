@@ -18,7 +18,7 @@ export default function ThesisIndex() {
       <section className="hero flex flex-col gap-4">
         <span className="eyebrow">{SITE.degree} · {SITE.university}</span>
         <h1 className="text-[28px] max-w-[46ch]">{SITE.title}</h1>
-        <p className="muted">{SITE.author} · supervised by {SITE.supervisors.join(" and ")} · <span className="tag tag-warn">{SITE.status}</span></p>
+        <p className="muted">{SITE.author} · supervised by {SITE.supervisors.join(" and ")}</p>
         <p className="lead">
           The full text, rendered from the manuscript the PDF was built from. Cross-references link to their section, table or figure; table
           captions link to the result cells behind them, figure captions to their interactive version on this site; terms of the glossary
@@ -47,7 +47,7 @@ export default function ThesisIndex() {
 
       <section className="flex flex-col gap-2" aria-labelledby="cite">
         <h2 id="cite">Cite</h2>
-        <p className="text-[14px]">Siu, K. W. (2026). <i>{SITE.title}</i>. Master&apos;s thesis, {SITE.university}. Submitted, not yet graded.</p>
+        <p className="text-[14px]">Siu, K. W. (2026). <i>{SITE.title}</i>. Master&apos;s thesis, {SITE.university}.</p>
         <pre className="pre text-[12px]">{BIBTEX}</pre>
       </section>
     </div>

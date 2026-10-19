@@ -44,7 +44,7 @@ export default function Home() {
       <section className="hero flex flex-col gap-4">
         <span className="eyebrow">{SITE.degree} · {SITE.university}</span>
         <h1 className="text-[30px] max-w-[46ch]">{SITE.title}</h1>
-        <p className="muted">{SITE.author} · supervised by {SITE.supervisors.join(" and ")} · <span className="tag tag-warn">{SITE.status}</span></p>
+        <p className="muted">{SITE.author} · supervised by {SITE.supervisors.join(" and ")}</p>
         <p className="lead">
           A language model plays Magic Tower, a deterministic game decided by the order of fights, doors and items. A deterministic engine
           lists the legal actions with their exact costs, the model chooses one, and an exact solver knows each floor&apos;s optimum.
@@ -94,7 +94,7 @@ export default function Home() {
             { href: "/results/", icon: IconTable, title: "Results", text: `${r.cells.filter((c) => c.thesis).length} cells behind the thesis tables, each with its settings, episodes and the command that re-runs it.`, go: "browse by thesis table" },
             { href: "/episodes/", icon: IconReplay, title: "Episodes", text: `${n.toLocaleString("en")} replays: the map, the observation, the reasoning and the answer at every turn.`, go: "filter by floor, model, outcome" },
             { href: "/compare/", icon: IconCompare, title: "Compare", text: "A win and a loss side by side, opened at the first turn where they act differently.", go: "compare two episodes" },
-            { href: "/solver/", icon: IconTarget, title: "Exact solver", text: "The search that gives every floor its optimum, step by step, and why the published one reported 22 instead of 68.", go: "step through the search" },
+            { href: "/solver/", icon: IconTarget, title: "BFS solver", text: "The search that gives every floor its optimum, step by step, and why the published one reported 22 instead of 68.", go: "step through the search" },
             { href: "/prompt-optimisation/", icon: IconDna, title: "Prompt optimisation", text: "Every evolved prompt, the teacher's diagnosis, the validator's verdict and the held-out result.", go: "candidate by candidate" },
             { href: "/play/", icon: IconGamepad, title: "Play", text: "Any single floor on the thesis engine, with the exact solver's value of every action.", go: "play a floor" },
             { href: "/tower/", icon: IconTower, title: "Tower Game", text: "The original 24-floor game in English, in the browser, and every tower run with the highest floor it reached.", go: "play the tower" },

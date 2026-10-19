@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ThesisToc } from "@/components/ThesisToc";
 import { getThesisChapters, renderChapter } from "@/lib/thesis";
 
 export const dynamicParams = false;
@@ -26,11 +27,7 @@ export default async function ThesisChapterPage({ params }: Params) {
       <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_16rem] max-w-[1180px] w-full mx-auto">
         <article className="thesis-body min-w-0" dangerouslySetInnerHTML={{ __html: r.html }} />
         <aside className="hidden xl:block">
-          <nav className="toc" aria-label="on this page">
-            <span className="eyebrow mb-1">{r.chapter.label || "Thesis"}</span>
-            {r.headings.map((h) => <a key={h.id} href={`#${h.id}`} className={h.depth === 3 ? "pl-5" : ""}>{h.text}</a>)}
-            <a href="/thesis/thesis.pdf" className="mt-3">PDF</a>
-          </nav>
+          <ThesisToc label={r.chapter.label || "Thesis"} headings={r.headings} />
         </aside>
       </div>
       <nav className="flex flex-wrap items-center gap-2 pt-4 border-t border-[var(--border-soft)] max-w-[1180px] w-full mx-auto" aria-label="chapters">

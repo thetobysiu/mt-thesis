@@ -15,7 +15,7 @@ export default function AboutPage() {
         <h1>About this site</h1>
         <p className="lead">
           The companion site of the master&apos;s thesis <i>{SITE.title}</i> ({SITE.degree}, {SITE.university}), supervised by{" "}
-          {SITE.supervisors.join(" and ")}. The thesis is {SITE.status}.
+          {SITE.supervisors.join(" and ")}.
         </p>
       </section>
 
@@ -79,7 +79,7 @@ export default function AboutPage() {
 
       <section className="flex flex-col gap-2" aria-labelledby="cite">
         <h2 id="cite">Cite</h2>
-        <p className="text-[14px]">Siu, K. W. (2026). <i>{SITE.title}</i>. Master&apos;s thesis, {SITE.university}. Submitted, not yet graded.</p>
+        <p className="text-[14px]">Siu, K. W. (2026). <i>{SITE.title}</i>. Master&apos;s thesis, {SITE.university}.</p>
         <pre className="pre text-[12px]">{BIBTEX}</pre>
       </section>
     </div>

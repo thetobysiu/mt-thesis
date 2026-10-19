@@ -80,6 +80,20 @@ function heroStyle(size: number): CSSProperties {
            backgroundSize: `${h.cols * fw}px ${h.rows * fh}px, ${g.backgroundSize}` };
 }
 
+/** The game tiles of a map and nothing else (no gutter, numbers or tooltips), to draw other layers on top. */
+export function TileLayer({ map, cell, removed, hero }: { map: MapData; cell: number; removed?: Set<string>; hero?: { x: number; y: number } | null }) {
+  return (
+    <div className="grid" style={{ gridTemplateColumns: `repeat(${map.width}, ${cell}px)` }} aria-hidden="true">
+      {map.grid.flatMap((row, y) => row.map((c, x) => {
+        const cellObj = typeof c === "string" ? ({ t: c } as MapCell) : c;
+        const gone = removed?.has(`${x},${y}`) ?? false;
+        const style = hero && hero.x === x && hero.y === y ? heroStyle(cell) : spriteStyle(gone ? null : spriteFor(cellObj), cell, gone || cellObj.t !== "#");
+        return <div key={`${x},${y}`} style={{ width: cell, height: cell, ...style }} />;
+      }))}
+    </div>
+  );
+}
+
 const CLS: Record<string, string> = {
   "#": "bg-[#374151] text-slate-500", ".": "bg-[#111827]", E: "bg-[#7f1d1d]", I: "bg-[#1e3a5f]",
   Y: "bg-[#78350f]", B: "bg-[#1e3a8a]", R: "bg-[#7f1d1d] border border-red-400", S: "bg-[#064e3b]", N: "bg-[#4c1d95]", T: "bg-[#1f2937]", "?": "bg-[#111827]",

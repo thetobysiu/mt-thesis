@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AppShell footer={
           <footer className="site-footer">
             <div className="flex flex-wrap gap-x-6 gap-y-1">
-              <span>{SITE.author} · {SITE.degree} · {SITE.university} · {SITE.status}</span>
+              <span>{SITE.author} · {SITE.degree} · {SITE.university}</span>
               <span>Code MIT · text and data CC BY 4.0 · game tiles BSD-3 (mota-js)</span>
               <a className="link" href={SITE.labRepo}>mt-ai-lab (framework and re-runs)</a>
               <a className="link" href={SITE.siteRepo}>source of this site</a>

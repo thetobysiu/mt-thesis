@@ -6,7 +6,6 @@ export const SITE = {
   university: "Leuphana University Lüneburg",
   supervisors: ["Prof. Dr. Ricardo Usbeck", "Prof. Dr. Burkhardt Funk"],
   degree: "Master's thesis, M.Sc. Data Science",
-  status: "submitted, not yet graded",
   labRepo: "https://github.com/thetobysiu/mt-ai-lab",
   siteRepo: "https://github.com/thetobysiu/mt-thesis",
 };
@@ -21,7 +20,6 @@ export const BIBTEX = `@mastersthesis{siu2026magictower,
   school = {${SITE.university}},
   type   = {Master's thesis (M.Sc. Data Science)},
   year   = {2026},
-  note   = {Submitted, not yet graded},
   url    = {${SITE.siteRepo}}
 }`;
 
@@ -30,6 +28,10 @@ export type NavItem = { href: string; label: string; icon: string; ready: boolea
 // Pages not built yet stay visible (marked "soon") so the site's structure is clear from the start.
 export const NAV: { group: string | null; items: NavItem[] }[] = [
   { group: null, items: [{ href: "/", label: "Start", icon: "home", ready: true }] },
+  { group: "Read", items: [
+    { href: "/thesis/", label: "Thesis", icon: "book", ready: true },
+    { href: "/glossary/", label: "Glossary", icon: "file", ready: true },
+  ] },
   { group: "Story", items: [
     { href: "/tour/", label: "Guided tour", icon: "compass", ready: true },
     { href: "/journey/", label: "Journey", icon: "route", ready: true },
@@ -41,18 +43,14 @@ export const NAV: { group: string | null; items: NavItem[] }[] = [
   ] },
   { group: "Explore", items: [
     { href: "/floors/", label: "Floors", icon: "map", ready: true },
-    { href: "/solver/", label: "Exact solver", icon: "target", ready: true },
+    { href: "/solver/", label: "BFS solver", icon: "target", ready: true },
     { href: "/prompt-optimisation/", label: "Prompt optimisation", icon: "dna", ready: true },
   ] },
   { group: "Play", items: [
     { href: "/play/", label: "Play", icon: "gamepad", ready: true },
     { href: "/tower/", label: "Tower Game", icon: "tower", ready: true },
   ] },
-  { group: "Read", items: [
-    { href: "/thesis/", label: "Thesis", icon: "book", ready: true },
-    { href: "/glossary/", label: "Glossary", icon: "file", ready: true },
-    { href: "/about/", label: "About", icon: "info", ready: true },
-  ] },
+  { group: null, items: [{ href: "/about/", label: "About", icon: "info", ready: true }] },
 ];
 
 /** Breadcrumb labels of the first path segment. */
