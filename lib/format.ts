@@ -10,6 +10,15 @@ export function ci(a: [number, number] | null | undefined): string {
   return a ? `[${a[0].toFixed(2)}, ${a[1].toFixed(2)}]` : "";
 }
 
+/** Wilson 95 % interval of k successes in n trials. */
+export function wilson(k: number, n: number, z = 1.96): [number, number] {
+  if (n <= 0) return [0, 1];
+  const p = k / n, d = 1 + (z * z) / n;
+  const c = (p + (z * z) / (2 * n)) / d;
+  const h = (z * Math.sqrt((p * (1 - p)) / n + (z * z) / (4 * n * n))) / d;
+  return [Math.max(0, c - h), Math.min(1, c + h)];
+}
+
 /** Display name of a model id as stored in the logs (e.g. qwen3.6-35b-a3b → Qwen3.6-35B). */
 export function modelName(m: string | null | undefined): string {
   if (!m) return "rule-based heuristic";

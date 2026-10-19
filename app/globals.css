@@ -291,3 +291,16 @@ mark { background: var(--mark); color: inherit; border-radius: 2px; padding: 0 1
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* tour */
+.tour-progress { display: flex; gap: 4px; }
+.tour-progress a { flex: 1; height: 6px; border-radius: 3px; background: var(--border-soft); transition: background .15s; }
+.tour-progress a.done { background: color-mix(in srgb, var(--gold) 45%, transparent); }
+.tour-progress a.on { background: var(--gold); }
+.tour-progress a:hover { background: var(--gold); }
+
+/* journey timeline */
+.journey { position: relative; display: flex; flex-direction: column; gap: 18px; padding-left: 22px; }
+.journey::before { content: ""; position: absolute; left: 6px; top: 6px; bottom: 6px; width: 2px; background: var(--border-soft); }
+.journey-item { position: relative; }
+.journey-dot { position: absolute; left: -21px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); border: 2px solid var(--gold); }

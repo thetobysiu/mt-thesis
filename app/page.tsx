@@ -52,7 +52,8 @@ export default function Home() {
           the first experiments to the final configuration.
         </p>
         <div className="flex flex-wrap gap-2">
-          {firstDecision && <Link className="btn btn-primary" href={firstDecision}><IconReplay aria-hidden="true" />Start with the first decision</Link>}
+          <Link className="btn btn-primary" href="/tour/"><IconCompass aria-hidden="true" />Take the guided tour</Link>
+          {firstDecision && <Link className="btn" href={firstDecision}><IconReplay aria-hidden="true" />Start with the first decision</Link>}
           <Link className="btn" href="/results/"><IconTable aria-hidden="true" />Browse the results</Link>
         </div>
       </section>

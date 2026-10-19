@@ -7,13 +7,20 @@ The public companion site of the master's thesis
 A language model plays Magic Tower; a deterministic engine lists the legal actions with exact costs, the model
 chooses one, and an exact solver knows each floor's optimum. The site shows the evidence behind the thesis:
 
+- **Guided tour**: eleven short chapters from the game to the conclusion, each with something to try (the first decision
+  of the simple floor as a question, the optimal route, the model's own input and reasoning, the exact solver, the result cells).
+- **Journey**: how the agent and its evaluation were developed, with the readings that later turned out wrong and the
+  validity incidents that exposed them.
 - **Results**: every cell of the thesis tables (one configuration, one model, one floor, N episodes) with its settings,
   episodes and the command that re-runs it in [mt-ai-lab](https://github.com/thetobysiu/mt-ai-lab).
 - **Episodes**: replays of all 1,905 stored episodes and tower runs named by a result file (harness smoke tests excluded):
-  map, observation, reasoning and answer at every turn.
+  map, observation, reasoning and answer at every turn, with the state value after each turn on single floors.
+- **Compare**: two episodes of one floor side by side, opened at the first turn where they act differently.
+- **Floors, exact solver, play**: the 21 single floors with their exact optima and routes, the solver's search step by
+  step in the browser, and every floor playable on a TypeScript port of the engine with solver hints.
 
-Still to come (in this order): the TypeScript engine and exact solver with single-floor play, the guided tour and the
-development journey, the prompt-optimisation runs, the tower page with the original game, the thesis chapters and the glossary.
+Still to come (in this order): the prompt-optimisation runs, the tower page with the original game, the thesis chapters,
+the glossary and the about page.
 
 The site is a static export with no server and no model calls ([ADR 0001](docs/adr/0001-static-replay-only-site.md)).
 The vocabulary follows the thesis glossary ([GLOSSARY.md](GLOSSARY.md)).
@@ -52,11 +59,11 @@ home directory or key pattern remains.
 ## Layout
 
 ```
-app/            pages (App Router): /, /results, /results/[cell], /episodes, /episodes/[id]
-components/     FloorMap (copied from mt-ai-lab), EpisodeViewer, RichText (observation/reasoning), …
-lib/            run.ts (replay core), data loaders, formatting
-scripts/        build-data.ts
-tests/          vitest
+app/            pages (App Router): /, /tour, /journey, /results, /episodes, /compare, /floors, /solver, /play
+components/     FloorMap (copied from mt-ai-lab), EpisodeViewer, CompareView, SolverExplorer, Player, tour/…
+lib/            run.ts (replay core), engine/ (TypeScript port of the engine), solver/ (exact solver, worker), data loaders
+scripts/        build-data.ts, build-floors.ts (Java optima), build-solutions.ts (routes, state values)
+tests/          vitest (the solver test searches the simple floor only)
 docs/adr/       architecture decisions
 ```
 

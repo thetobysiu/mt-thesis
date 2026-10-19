@@ -17,8 +17,8 @@ export type NavItem = { href: string; label: string; icon: string; ready: boolea
 export const NAV: { group: string | null; items: NavItem[] }[] = [
   { group: null, items: [{ href: "/", label: "Start", icon: "home", ready: true }] },
   { group: "Story", items: [
-    { href: "/tour/", label: "Guided tour", icon: "compass", ready: false },
-    { href: "/journey/", label: "Journey", icon: "route", ready: false },
+    { href: "/tour/", label: "Guided tour", icon: "compass", ready: true },
+    { href: "/journey/", label: "Journey", icon: "route", ready: true },
   ] },
   { group: "Evidence", items: [
     { href: "/results/", label: "Results", icon: "table", ready: true },

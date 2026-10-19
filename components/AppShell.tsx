@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useSyncExternalStore, type ComponentType, type SVGProps } from "react";
 import { NAV, SECTION_LABELS, SITE } from "@/lib/site";
+import { TOUR } from "@/lib/tour";
 import {
   IconBook, IconChevronRight, IconCompare, IconCompass, IconDna, IconFile, IconGamepad, IconHome, IconInfo, IconMap, IconMenu,
   IconPanel, IconReplay, IconRoute, IconTable, IconTarget, IconTower,
@@ -32,7 +33,9 @@ function Crumbs({ path }: { path: string }) {
         : <>
             <Link href={`/${section}/`}>{SECTION_LABELS[section] ?? section}</Link>
             <IconChevronRight />
-            <span className="here mono" aria-current="page">{decodeURIComponent(parts[parts.length - 1])}</span>
+            <span className={`here ${section === "tour" ? "" : "mono"}`} aria-current="page">
+              {section === "tour" ? TOUR.find((c) => c.slug === parts[1])?.title ?? parts[1] : decodeURIComponent(parts[parts.length - 1])}
+            </span>
           </>}
     </nav>
   );

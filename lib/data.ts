@@ -1,7 +1,9 @@
 // Build-time access to the generated data (server components only).
 import fs from "node:fs";
 import path from "node:path";
-import type { CellSummary, EpisodeEntry, EpisodeIndex, FloorEntry, FloorSolution, ResultsIndex } from "./data-types";
+import zlib from "node:zlib";
+import type { CellSummary, EpisodeEntry, EpisodeIndex, EpisodeValues, FloorEntry, FloorSolution, ResultsIndex } from "./data-types";
+import type { RunLog } from "./types";
 
 const DATA = path.join(process.cwd(), "public", "data");
 let results: ResultsIndex | null = null;
@@ -37,4 +39,22 @@ export function getFloorText(id: string): string {
 
 export function getSolution(id: string): FloorSolution {
   return JSON.parse(fs.readFileSync(path.join(DATA, "floors", `${id}.solution.json`), "utf8")) as FloorSolution;
+}
+
+/** A stored episode log, decompressed at build time. */
+export function readEpisodeLog(id: string): RunLog {
+  return JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(DATA, "episodes", `${id}.json.gz`))).toString("utf8")) as RunLog;
+}
+
+/** Precomputed state values of an episode (single floors), or null. */
+export function readEpisodeValues(id: string): EpisodeValues | null {
+  const f = path.join(DATA, "values", `${id}.json`);
+  return fs.existsSync(f) ? (JSON.parse(fs.readFileSync(f, "utf8")) as EpisodeValues) : null;
+}
+
+/** Episodes of a cell in run order. */
+export function cellEpisodes(label: string): EpisodeEntry[] {
+  const cell = getCell(label);
+  if (!cell) return [];
+  return cell.runs.map((r) => (r.episode ? getEpisode(r.episode) : undefined)).filter((e): e is EpisodeEntry => !!e);
 }
