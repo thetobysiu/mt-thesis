@@ -18,6 +18,9 @@ export default function PlayPage() {
           hints to see, for every action, the best final HP still reachable after it: the same state values the thesis uses to find the
           decision that lost an episode.
         </p>
+        <p className="text-[14px]">
+          The full 24-floor tower is playable in the <Link className="link" href="/tower/#play">original game</Link>, with an English guide to its controls.
+        </p>
       </section>
       <div className="card-grid">
         {floors.map((f) => (

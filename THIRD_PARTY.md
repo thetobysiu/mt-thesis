@@ -6,7 +6,9 @@ its own licence and attribution.
 ## 24-floor Magic Tower game tiles (ckcz123/mota-js)
 
 - **Where:** the six sprite sheets in `public/sprites/` and their tile index `lib/sprites.json`
-  (copied from mt-ai-lab, which copied them unchanged from the game data).
+  (copied from mt-ai-lab, which copied them unchanged from the game data), and the playable game under
+  `public/game/24/` (index.html, main.js, styles.css, logo.png, libs/, project/, extensions/ of the thesis
+  workspace's copy of the 24-floor tower, unchanged; the editor, saves and documentation are not included).
 - **Source:** the 24-floor sample tower of the HTML5 Magic Tower template, version 2.10.3,
   https://github.com/ckcz123/mota-js
 - **Licence:** BSD 3-Clause, reproduced below.

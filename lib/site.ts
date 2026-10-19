@@ -27,7 +27,7 @@ export const NAV: { group: string | null; items: NavItem[] }[] = [
     { href: "/floors/", label: "Floors", icon: "map", ready: true },
     { href: "/solver/", label: "Exact solver", icon: "target", ready: true },
     { href: "/prompt-optimisation/", label: "Prompt optimisation", icon: "dna", ready: true },
-    { href: "/tower/", label: "Tower", icon: "tower", ready: false },
+    { href: "/tower/", label: "Tower", icon: "tower", ready: true },
   ] },
   { group: "Play", items: [{ href: "/play/", label: "Play", icon: "gamepad", ready: true }] },
   { group: "Read", items: [
