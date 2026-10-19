@@ -2,23 +2,24 @@
 // Steps through the solver's search on one floor: the merged-node graph, the state taken from the queue, the
 // frontier, dominance pruning, and the difference between the exact and the published search. Floors whose search
 // takes minutes (complex, hand03) show the stored result instead of searching.
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { MapSkinSelect, TileLayer, useMapSkin, type MapSkin } from "./FloorMap";
+import { IconNext, IconPause, IconPlay, IconPrev, IconSkipEnd, IconSkipStart } from "./Icons";
 import { Stat, Widget } from "./Widget";
-import type { FloorSolution } from "@/lib/data-types";
+import type { FloorSolution, RouteStepData } from "@/lib/data-types";
 import { parseFloor, type FloorDef } from "@/lib/engine/floor";
 import { floorMapData } from "@/lib/engine/mapdata";
 import { itemTable } from "@/lib/engine/state";
 import { Graph, Search, type SearchEvent, type SNode, type SolverState } from "@/lib/solver/solver";
 
-const CELL = 40;
+const MIN_CELL = 28, MAX_CELL = 56;
 const DOOR_FILL: Record<number, string> = { 81: "#EAB308", 82: "#3B82F6", 83: "#EF4444" };
 export type SolverFloor = { id: string; title: string; text: string; optimum: number; published: number | null; solution?: FloorSolution };
 type Mode = "exact" | "published";
 type Snapshot = { index: number; polls: number; queue: number; skip: number; push: number; best: SolverState | null; current: SolverState | null; done: boolean; log: string[] };
 /** What the graph shows: the nodes a state has cleared, the order of its decisions, and the nodes it can take next. */
-type View = { visited: Set<number>; order: Map<number, number>; frontier: Set<number> };
+type View = { visited: Set<number>; order: Map<number, number>; frontier: Set<number>; hero?: { x: number; y: number } };
 type RouteRow = { nodes: SNode[]; hp: number };
 
 function nodeNamer(def: FloorDef) {
@@ -79,7 +80,79 @@ function viewOf(g: Graph, s: SolverState | null): View {
   const order = new Map<number, number>();
   s.route.filter((r) => r.kind === "decision").forEach((r, i) => order.set(r.nodeId, i + 1));
   const frontier = new Set([...s.current.linked].filter((n) => !s.visited[n.id]).map((n) => n.id));
-  return { visited, order, frontier };
+  return { visited, order, frontier, hero: { x: s.current.y, y: s.current.x } };
+}
+
+type ReplayStep = { decision: boolean; nodes: SNode[]; at: { x: number; y: number }; hp: number; atk: number; def: number; keys: number[] };
+
+/** One view per decision of a finished route: view k is after decision k and the pickups that follow it (0 = the start). */
+function replayOf(g: Graph, steps: ReplayStep[]) {
+  const visited = new Set<number>([0]);
+  const order = new Map<number, number>();
+  const route: RouteRow[] = [];
+  const heroes: ReplayStep[] = [];
+  const frames: View[] = [];
+  let hero = steps[0]?.at ?? { x: 0, y: 0 };
+  const snap = (): View => {
+    const frontier = new Set<number>();
+    for (const n of g.list) if (visited.has(n.id)) for (const m of n.linked) if (!visited.has(m.id)) frontier.add(m.id);
+    return { visited: new Set(visited), order: new Map(order), frontier, hero };
+  };
+  let prev: ReplayStep | null = null;
+  for (const s of steps) {
+    if (s.decision && prev) { frames.push(snap()); heroes.push(prev); }
+    s.nodes.forEach((n) => visited.add(n.id));
+    hero = s.at;
+    prev = s;
+    if (!s.decision) continue;
+    route.push({ nodes: s.nodes, hp: s.hp });
+    s.nodes.forEach((n) => order.set(n.id, route.length));
+  }
+  if (prev) { frames.push(snap()); heroes.push(prev); }
+  return { frames, route, heroes };
+}
+
+const replaySummary = (at: number, h: ReplayStep | undefined) =>
+  h ? `${at} decisions · HP ${h.hp} · ATK ${h.atk} / DEF ${h.def} · keys ${h.keys.join("/")}` : "start of the floor";
+
+/** Position and autoplay of a replay; sits at the end until the reader moves it. */
+function useReplay(last: number) {
+  const [pos, setPos] = useState<number | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const at = Math.min(pos ?? last, last);
+  const running = playing && at < last;
+
+  useEffect(() => {
+    if (!running) return;
+    const t = setTimeout(() => setPos(at + 1), 700);
+    return () => clearTimeout(t);
+  }, [running, at]);
+
+  return {
+    at, running,
+    stepTo: (v: number) => { setPlaying(false); setPos(Math.max(0, Math.min(last, v))); },
+    togglePlay: () => {
+      if (running) { setPlaying(false); return; }
+      if (at >= last) setPos(0);
+      setPlaying(true);
+    },
+    reset: () => { setPos(null); setPlaying(false); },
+  };
+}
+
+function ReplayControls({ r, last }: { r: ReturnType<typeof useReplay>; last: number }) {
+  return (
+    <div className="flex flex-wrap items-center gap-1">
+      <button className="btn btn-sm" onClick={() => r.stepTo(0)} aria-label="start"><IconSkipStart /></button>
+      <button className="btn btn-sm" onClick={() => r.stepTo(r.at - 1)} aria-label="previous decision"><IconPrev /></button>
+      <button className="btn btn-sm btn-primary" onClick={r.togglePlay} aria-label={r.running ? "pause" : "play"}>{r.running ? <IconPause /> : <IconPlay />}</button>
+      <button className="btn btn-sm" onClick={() => r.stepTo(r.at + 1)} aria-label="next decision"><IconNext /></button>
+      <button className="btn btn-sm" onClick={() => r.stepTo(last)} aria-label="end"><IconSkipEnd /></button>
+      <input type="range" min={0} max={last} value={r.at} onChange={(e) => r.stepTo(Number(e.target.value))}
+             className="flex-1 min-w-[140px] max-w-[420px] mx-2" aria-label="decision" />
+      <span className="mono text-[12px] muted">decision {r.at} / {last}</span>
+    </div>
+  );
 }
 
 export function SolverExplorer({ floors }: { floors: SolverFloor[] }) {
@@ -119,6 +192,7 @@ function SolverRun({ floor, mode, skin }: { floor: SolverFloor; mode: Mode; skin
     setRunner(r);
     setSnap(r.snapshot());
     setRunning(false);
+    rp.reset();
   };
   const advance = (n: number) => {
     const s = runner.advance(n);
@@ -139,9 +213,15 @@ function SolverRun({ floor, mode, skin }: { floor: SolverFloor; mode: Mode; skin
   }, [running, runner]);
 
   const best = snap.best;
-  const shown = snap.done && best ? best : snap.current;
-  const view = useMemo(() => viewOf(g, shown), [g, shown]);
-  const route: RouteRow[] = shown ? shown.route.filter((r) => r.kind === "decision")
+  const finished = snap.done && best != null;
+  const replay = useMemo(() => finished ? replayOf(g, best.route.map((r) => ({
+    decision: r.kind === "decision", nodes: g.list.filter((m) => m.id === r.nodeId), at: r.tiles[0],
+    hp: r.hero.hp, atk: r.hero.atk, def: r.hero.def, keys: [r.hero.yellow, r.hero.blue, r.hero.red],
+  }))) : null, [g, finished, best]);
+  const rp = useReplay(replay?.route.length ?? 0);
+  const shown = finished ? best : snap.current;
+  const view = useMemo(() => replay ? replay.frames[rp.at] : viewOf(g, snap.current), [g, replay, rp.at, snap.current]);
+  const route: RouteRow[] = replay ? replay.route : shown ? shown.route.filter((r) => r.kind === "decision")
     .map((r) => ({ nodes: g.list.filter((m) => m.id === r.nodeId), hp: r.hero.hp })) : [];
 
   return (
@@ -153,7 +233,7 @@ function SolverRun({ floor, mode, skin }: { floor: SolverFloor; mode: Mode; skin
         <button className="btn btn-sm btn-primary" onClick={() => setRunning((v) => !v)} disabled={snap.done}>{running ? "pause" : "run to the end"}</button>
         <button className="btn btn-sm" onClick={reset}>reset</button>
       </div>
-
+      {replay && <ReplayControls r={rp} last={replay.route.length} />}
       <div className="grid gap-[var(--gap)] xl:grid-cols-[minmax(0,1fr)_420px]">
         <SearchGraph g={g} def={def} view={view} name={name} skin={skin} />
         <div className="flex flex-col gap-[var(--gap)] min-w-0">
@@ -165,8 +245,11 @@ function SolverRun({ floor, mode, skin }: { floor: SolverFloor; mode: Mode; skin
                   sub={snap.done ? `finished · optimum ${floor.optimum}` : `optimum ${floor.optimum}`} />
           </div>
           {shown && (
-            <RouteList title={snap.done && best ? "Best state found" : "State just taken"} route={route} name={name}
-                       summary={`${shown.cnt} decisions · HP ${shown.score} · ATK ${shown.current.hero!.atk} / DEF ${shown.current.hero!.def} · keys ${shown.current.hero!.yellow}/${shown.current.hero!.blue}/${shown.current.hero!.red}`} />
+            replay
+              ? <RouteList title={rp.at === replay.route.length ? "Best state found" : `State after decision ${rp.at}`} route={route} name={name} at={rp.at} onPick={rp.stepTo}
+                           summary={replaySummary(rp.at, replay.heroes[rp.at])} />
+              : <RouteList title="State just taken" route={route} name={name}
+                           summary={`${shown.cnt} decisions · HP ${shown.score} · ATK ${shown.current.hero!.atk} / DEF ${shown.current.hero!.def} · keys ${shown.current.hero!.yellow}/${shown.current.hero!.blue}/${shown.current.hero!.red}`} />
           )}
           <Widget title="What the search did (newest first)" bodyClass="p-0" flush>
             <div className="max-h-[320px] overflow-auto font-mono text-[12px] py-1">
@@ -187,29 +270,29 @@ function StoredRun({ floor, solution, mode, skin }: { floor: SolverFloor; soluti
   const name = useMemo(() => nodeNamer(def), [def]);
   const g = useMemo(() => new Graph(floor.text), [floor.text]);
   const sol = solution[mode];
-  const { view, route } = useMemo(() => {
-    const at = new Map<string, SNode>();
-    for (const n of g.list) for (const p of [n, ...n.parts]) at.set(`${p.y},${p.x}`, n);
-    const visited = new Set<number>([0]);
-    const order = new Map<number, number>();
-    const rows: RouteRow[] = [];
-    for (const s of sol.route) {
-      const nodes = [...new Set(s.tiles.map((t) => at.get(`${t.x},${t.y}`)).filter((n): n is SNode => !!n))];
-      nodes.forEach((n) => visited.add(n.id));
-      if (s.kind !== "decision") continue;
-      rows.push({ nodes, hp: s.hp });
-      nodes.forEach((n) => order.set(n.id, rows.length));
-    }
-    return { view: { visited, order, frontier: new Set<number>() }, route: rows };
+  const { frames, route, heroes } = useMemo(() => {
+    const byTile = new Map<string, SNode>();
+    for (const n of g.list) for (const p of [n, ...n.parts]) byTile.set(`${p.y},${p.x}`, n);
+    return replayOf(g, sol.route.map((s) => ({
+      decision: s.kind === "decision",
+      at: s.tiles[0],
+      nodes: [...new Set(s.tiles.map((t) => byTile.get(`${t.x},${t.y}`)).filter((n): n is SNode => !!n))],
+      hp: s.hp, atk: s.atk, def: s.def, keys: s.keys,
+    })));
   }, [g, sol]);
-  const last = sol.route.at(-1);
+  const last = route.length;
+  const rp = useReplay(last);
+  const { at } = rp;
+  const view = frames[at];
+  const hero = heroes[at];
 
   return (
     <>
       <div className="panel p-3 text-[13px] max-w-[90ch]">
         This floor&apos;s search takes minutes and a lot of memory, so it does not run in the browser. The graph shows the best state of
-        the stored {mode} search, computed once with the same solver; the other floors run live.
+        the stored {mode} search, computed once with the same solver; the other floors run live. Step through its decisions below.
       </div>
+      <ReplayControls r={rp} last={last} />
       <div className="grid gap-[var(--gap)] xl:grid-cols-[minmax(0,1fr)_420px]">
         <SearchGraph g={g} def={def} view={view} name={name} skin={skin} />
         <div className="flex flex-col gap-[var(--gap)] min-w-0">
@@ -219,8 +302,8 @@ function StoredRun({ floor, solution, mode, skin }: { floor: SolverFloor; soluti
             <Stat label="Best" value={sol.hp != null ? `${sol.hp} HP` : "–"} tone={sol.hp === floor.optimum ? "ok" : undefined} sub={`optimum ${floor.optimum}`} />
             <Stat label="Decisions" value={route.length} sub="on the route below" />
           </div>
-          <RouteList title="Best state found" route={route} name={name}
-                     summary={last ? `${route.length} decisions · HP ${last.hp} · ATK ${last.atk} / DEF ${last.def} · keys ${last.keys.join("/")}` : ""} />
+          <RouteList title={at === last ? "Best state found" : "State after decision " + at} route={route} name={name} at={at} onPick={rp.stepTo}
+                     summary={replaySummary(at, hero)} />
           <SearchNotes floor={floor} />
         </div>
       </div>
@@ -228,19 +311,27 @@ function StoredRun({ floor, solution, mode, skin }: { floor: SolverFloor; soluti
   );
 }
 
-function RouteList({ title, summary, route, name }: { title: string; summary: string; route: RouteRow[]; name: (n: SNode) => string }) {
+function RouteList({ title, summary, route, name, at, onPick }: { title: string; summary: string; route: RouteRow[]; name: (n: SNode) => string; at?: number; onPick?: (decision: number) => void }) {
   return (
     <div className="panel p-3 text-[13px]">
       <b>{title}:</b> {summary}
       {route.length > 0 && (
         <ol className="mt-2 flex flex-col gap-1 font-mono text-[12px]">
-          {route.map((r, i) => (
-            <li key={i} className="grid grid-cols-[1.6rem_1fr_auto] gap-2 items-baseline">
-              <span className="text-right text-[var(--gold)]">{i + 1}</span>
-              <span>{r.nodes.map(name).join(", ") || "–"}</span>
-              <span className="muted whitespace-nowrap">→ {r.hp} HP</span>
-            </li>
-          ))}
+          {route.map((r, i) => {
+            const cls = `grid grid-cols-[1.6rem_1fr_auto] gap-2 items-baseline w-full text-left rounded-sm px-1 ${at != null && i + 1 > at ? "opacity-40" : ""} ${at === i + 1 ? "bg-[var(--border-soft)]" : ""}`;
+            const cells = (
+              <>
+                <span className="text-right text-[var(--gold)]">{i + 1}</span>
+                <span>{r.nodes.map(name).join(", ") || "–"}</span>
+                <span className="muted whitespace-nowrap">→ {r.hp} HP</span>
+              </>
+            );
+            return (
+              <li key={i}>
+                {onPick ? <button type="button" className={cls} onClick={() => onPick(i + 1)} aria-current={at === i + 1 || undefined}>{cells}</button> : <div className={cls}>{cells}</div>}
+              </li>
+            );
+          })}
         </ol>
       )}
     </div>
@@ -249,6 +340,21 @@ function RouteList({ title, summary, route, name }: { title: string; summary: st
 
 function SearchGraph({ g, def, view, name, skin }: { g: Graph; def: FloorDef; view: View; name: (n: SNode) => string; skin: MapSkin }) {
   const tiles = skin === "game";
+  const wrap = useRef<HTMLDivElement>(null);
+  const [CELL, setCell] = useState(40);
+  useEffect(() => {
+    const el = wrap.current;
+    if (!el) return;
+    const measure = () => {
+      const byWidth = (el.clientWidth - 16) / g.cols, byHeight = (window.innerHeight * 0.8) / g.rows;
+      setCell(Math.max(MIN_CELL, Math.min(MAX_CELL, Math.floor(Math.min(byWidth, byHeight)))));
+    };
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    window.addEventListener("resize", measure);
+    measure();
+    return () => { ro.disconnect(); window.removeEventListener("resize", measure); };
+  }, [g]);
   const map = useMemo(() => floorMapData(def), [def]);
   const removed = useMemo(() => new Set(g.list.filter((n) => n.id !== 0 && view.visited.has(n.id))
     .flatMap((n) => [n, ...n.parts]).map((p) => `${p.y},${p.x}`)), [g, view]);
@@ -258,9 +364,10 @@ function SearchGraph({ g, def, view, name, skin }: { g: Graph; def: FloorDef; vi
 
   return (
     <Widget title="Search graph" bodyClass="scroll-x">
+      <div ref={wrap} className="w-full flex justify-center">
       <div className="board inline-block">
       <div className="relative" style={{ width: w, height: h }}>
-        {tiles && <TileLayer map={map} cell={CELL} removed={removed} hero={{ x: def.hero.x, y: def.hero.y }} />}
+        {tiles && <TileLayer map={map} cell={CELL} removed={removed} hero={view.hero ?? { x: def.hero.x, y: def.hero.y }} />}
         <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="block absolute inset-0" role="img" aria-label="merged node graph of the floor">
           {!tiles && g.map[0].map((row, r) => row.map((t, c) => (
             <rect key={`${r},${c}`} x={c * CELL} y={r * CELL} width={CELL} height={CELL} fill={t === 1 ? "#1E293B" : "#0B1220"} stroke="#111827" />
@@ -280,7 +387,8 @@ function SearchGraph({ g, def, view, name, skin }: { g: Graph; def: FloorDef; vi
             const visited = view.visited.has(n.id);
             const next = view.frontier.has(n.id);
             const step = view.order.get(n.id);
-            const label = n.id === 0 ? (tiles ? "" : "@") : step != null ? String(step) : "";
+            const here = view.hero != null && view.hero.x === (n.parts[0] ?? n).y && view.hero.y === (n.parts[0] ?? n).x;
+            const label = !tiles && here ? "@" : step != null ? String(step) : "";
             const tip = `node ${n.id}: ${name(n)}${step != null ? ` · decision ${step}` : ""}${visited ? " (cleared in this state)" : next ? " (can be taken next)" : ""}`;
             return (
               <g key={n.id}>
@@ -309,6 +417,7 @@ function SearchGraph({ g, def, view, name, skin }: { g: Graph; def: FloorDef; vi
             );
           })}
         </svg>
+      </div>
       </div>
       </div>
       <p className="muted text-[13px] mt-2">
