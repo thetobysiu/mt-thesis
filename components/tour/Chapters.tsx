@@ -438,7 +438,11 @@ export function TourContent({ slug }: { slug: string }) {
               fight or the scarcity of keys (Table 6.7). With the annotations present, its gains stay within the
               variation between repeated evaluations; across the experiments, the observation constrained success more than the prompt did.
             </p>
-            <p className="text-[14px] muted">The prompt-optimisation pages, with each iteration&apos;s prompt, the teacher&apos;s diagnosis and the validator&apos;s verdict, follow in a later step.</p>
+            <p className="text-[14px]">
+              Every run, candidate by candidate, with the prompt diff, the teacher&apos;s diagnosis, the validator&apos;s verdict and the training
+              episodes, is on the <Link className="link" href="/prompt-optimisation/">prompt-optimisation pages</Link>; the one rewrite that changed
+              behaviour is <Link className="link" href="/prompt-optimisation/gs2_dsv4flash_bare/">here</Link>.
+            </p>
           </Say>
         </>
       );
