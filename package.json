@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "test": "vitest run",
     "data": "tsx scripts/build-data.ts",
-    "thesis": "tsx scripts/build-thesis.ts"
+    "thesis": "tsx scripts/build-thesis.ts",
+    "smoke": "tsx scripts/smoke.ts"
   },
   "dependencies": {
     "@fontsource/fira-code": "^5.3.0",

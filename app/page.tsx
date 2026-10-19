@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { IconChevronRight, IconCompass, IconReplay, IconTable } from "@/components/Icons";
+import { IconBook, IconChevronRight, IconCompare, IconCompass, IconDna, IconGamepad, IconReplay, IconRoute, IconTable, IconTarget, IconTower } from "@/components/Icons";
 import { getCell, getEpisode, getEpisodes, getResults } from "@/lib/data";
 import { SITE } from "@/lib/site";
 
@@ -86,20 +86,27 @@ export default function Home() {
       </section>
 
       <section className="flex flex-col gap-3" aria-labelledby="evidence">
-        <h2 id="evidence">The evidence</h2>
+        <h2 id="evidence">Explore</h2>
         <div className="card-grid">
-          <Link className="card-link" href="/results/">
-            <span className="card-icon"><IconTable aria-hidden="true" /></span>
-            <span className="heading text-[15px]">Results</span>
-            <span className="muted">{r.cells.filter((c) => c.thesis).length} cells behind the thesis tables, each with its settings, episodes and the command that re-runs it.</span>
-            <span className="go">browse by thesis table</span>
-          </Link>
-          <Link className="card-link" href="/episodes/">
-            <span className="card-icon"><IconReplay aria-hidden="true" /></span>
-            <span className="heading text-[15px]">Episodes</span>
-            <span className="muted">{n.toLocaleString("en")} replays: the map, the observation, the reasoning and the answer at every turn.</span>
-            <span className="go">filter by floor, model, outcome</span>
-          </Link>
+          {[
+            { href: "/tour/", icon: IconCompass, title: "Guided tour", text: "Eleven short chapters from the game to the conclusion, each with something to try.", go: "start the tour" },
+            { href: "/journey/", icon: IconRoute, title: "Journey", text: "From single scored episodes to the final configuration, with the readings that did not survive.", go: "26 milestones" },
+            { href: "/results/", icon: IconTable, title: "Results", text: `${r.cells.filter((c) => c.thesis).length} cells behind the thesis tables, each with its settings, episodes and the command that re-runs it.`, go: "browse by thesis table" },
+            { href: "/episodes/", icon: IconReplay, title: "Episodes", text: `${n.toLocaleString("en")} replays: the map, the observation, the reasoning and the answer at every turn.`, go: "filter by floor, model, outcome" },
+            { href: "/compare/", icon: IconCompare, title: "Compare", text: "A win and a loss side by side, opened at the first turn where they act differently.", go: "compare two episodes" },
+            { href: "/solver/", icon: IconTarget, title: "Exact solver", text: "The search that gives every floor its optimum, step by step, and why the published one reported 22 instead of 68.", go: "step through the search" },
+            { href: "/prompt-optimisation/", icon: IconDna, title: "Prompt optimisation", text: "Every evolved prompt, the teacher's diagnosis, the validator's verdict and the held-out result.", go: "candidate by candidate" },
+            { href: "/tower/", icon: IconTower, title: "Tower", text: "Every tower run with the highest floor it reached, and the original 24-floor game to play.", go: "runs and the game" },
+            { href: "/play/", icon: IconGamepad, title: "Play", text: "Any single floor on the thesis engine, with the exact solver's value of every action.", go: "play a floor" },
+            { href: "/thesis/", icon: IconBook, title: "Thesis", text: "The full text with linked references, the result cells behind each table, and the PDF.", go: "read the thesis" },
+          ].map((c) => (
+            <Link key={c.href} className="card-link" href={c.href}>
+              <span className="card-icon"><c.icon aria-hidden="true" /></span>
+              <span className="heading text-[15px]">{c.title}</span>
+              <span className="muted">{c.text}</span>
+              <span className="go">{c.go}</span>
+            </Link>
+          ))}
         </div>
       </section>
     </div>
