@@ -21,7 +21,8 @@ export default function ThesisIndex() {
         <p className="muted">{SITE.author} · supervised by {SITE.supervisors.join(" and ")} · <span className="tag tag-warn">{SITE.status}</span></p>
         <p className="lead">
           The full text, rendered from the manuscript the PDF was built from. Cross-references link to their section, table or figure; table
-          captions link to the result cells behind them; terms of the glossary show their definition on hover.
+          captions link to the result cells behind them, figure captions to their interactive version on this site; terms of the glossary
+          show their definition on hover.
         </p>
         <div className="flex flex-wrap gap-2">
           <Link className="btn btn-primary" href="/thesis/abstract/">Read from the abstract</Link>

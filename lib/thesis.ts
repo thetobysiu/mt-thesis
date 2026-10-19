@@ -118,7 +118,21 @@ function glossarise(html: string): string {
   }).join("");
 }
 
+// figures whose content can be explored on the site
+const FIGURE_LINKS: Record<string, [string, string]> = {
+  "1.1": ["/tour/observation/", "see the agent's input"], "2.4": ["/tour/one-decision/", "try this decision"],
+  "4.1": ["/floors/simple/", "step through the route"], "4.2": ["/solver/", "step through the search"], "4.3": ["/tour/one-decision/", "try this decision"],
+  "5.1": ["/tour/observation/", "see the agent's input"], "5.3": ["/episodes/", "the replays on this site"],
+  "6.1": ["/tour/repairs/", "interactive chart"], "6.2": ["/floors/complex/", "the complex floor"],
+  "6.3": ["/prompt-optimisation/gs2_dsv4flash_bare/", "the rewrite, candidate by candidate"], "6.4": ["/tour/planning-and-tower/", "planning and the tower"],
+  "B.1": ["/floors/complex/", "explore the floor"], "B.2": ["/floors/hand01/", "explore the floor"],
+};
+
 function resultsLinks(kind: string, num: string): string {
+  if (kind === "Figure") {
+    const f = FIGURE_LINKS[num];
+    return f ? ` <span class="caption-cells"><a href="${f[0]}">${f[1]}</a></span>` : "";
+  }
   if (kind !== "Table") return "";
   const re = new RegExp(`(^|\\W)Tables? ${num.replace(/\./g, "\\.")}(?![\\d.])`);
   const hits = getResults().tables.filter((t) => re.test(t.title));
