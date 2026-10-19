@@ -16,11 +16,12 @@ chooses one, and an exact solver knows each floor's optimum. The site shows the 
 - **Episodes**: replays of all 1,905 stored episodes and tower runs named by a result file (harness smoke tests excluded):
   map, observation, reasoning and answer at every turn, with the state value after each turn on single floors.
 - **Compare**: two episodes of one floor side by side, opened at the first turn where they act differently.
-- **Floors, exact solver, play**: the 21 single floors with their exact optima and routes, the solver's search step by
-  step in the browser, and every floor playable on a TypeScript port of the engine with solver hints.
+- **Floors, exact solver, play**: the 21 single floors with their exact optima and routes, the most common winning
+  trajectory against the optimal route with the turn where it leaves it, the solver's search step by step in the
+  browser, and every floor playable on a TypeScript port of the engine with solver hints.
 - **Prompt optimisation**: every run of the thesis study candidate by candidate: prompt diff, teacher diagnosis,
   validator verdict, training episodes and held-out results.
-- **Tower**: every tower run with its replay, and the original 24-floor game playable in the browser.
+- **Tower Game**: the original 24-floor game in English, starting on MT0, and every tower run with its replay.
 - **Thesis**: the full text with cross-references, table captions linked to their result cells, glossary hovers,
   KaTeX math and the submitted PDF; the glossary; imprint, privacy notice and citation on the about page.
 
@@ -37,7 +38,15 @@ npm test             # data leak check, index consistency, replay of a stored ep
 npm run typecheck && npm run lint
 ```
 
-Node 20 or newer.
+Node 20 or newer. `npm run smoke` checks the built `out/` (main pages, game files, every internal link).
+
+## Deploy
+
+Import the GitHub repository in Vercel and keep the detected Next.js preset; no build settings or environment
+variables are needed. Vercel runs `npm install` and `npm run build`, and serves the static export. Everything the
+build reads is committed (`public/data/`, `content/thesis/`, the game copy), so it needs neither mt-ai-lab nor the
+thesis workspace. The sitemap and canonical URLs use `NEXT_PUBLIC_SITE_URL` if set, else Vercel's production
+domain. Web Analytics is switched on in the Vercel project settings.
 
 ## Data
 
@@ -65,7 +74,8 @@ The thesis text, figures, glossary and PDF are copied from the thesis workspace 
 MT_THESIS=<thesis folder with chapters_v2/, chapters/bibliography.md, graphs/, figures/, latex/main.pdf> npm run thesis
 ```
 
-The original game under `public/game/24/` is a copy of the 24-floor tower's runtime (no editor, saves or docs).
+The original game under `public/game/24/` is a copy of the 24-floor tower's runtime (no editor, saves or docs),
+plus `play.html` and `en.js` (English text, direct start on MT0).
 
 ## Layout
 

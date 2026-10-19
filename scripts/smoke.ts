@@ -7,11 +7,12 @@ const OUT = path.resolve("out");
 const PAGES: [string, string][] = [
   ["/", "Main findings"], ["/tour/", "eleven steps"], ["/tour/one-decision/", "One decision"], ["/journey/", "From single episodes"],
   ["/results/", "Results"], ["/episodes/", "Episodes"], ["/compare/", "Compare two episodes"], ["/floors/", "simple"],
-  ["/floors/simple/", "13"], ["/solver/", "step by step"], ["/play/", "Play a floor"], ["/play/simple/", "Simple"],
-  ["/prompt-optimisation/", "The loop"], ["/prompt-optimisation/gs2_dsv4flash_bare/", "Candidate"], ["/tower/", "Play the original game"],
+  ["/floors/simple/", "leaves the optimal route here"], ["/solver/", "step by step"], ["/play/", "Play a floor"], ["/play/simple/", "Simple"],
+  ["/prompt-optimisation/", "The loop"], ["/prompt-optimisation/gs2_dsv4flash_bare/", "Candidate"], ["/tower/", "Tower Game"],
   ["/thesis/", "Cite"], ["/thesis/experiments/", "Table 6.5"], ["/glossary/", "Exact solver"], ["/about/", "Privacy notice"],
 ];
-const FILES = ["/game/24/index.html", "/game/24/play.html", "/game/24/en.js", "/game/24/main.js", "/thesis/thesis.pdf", "/data/episodes.json", "/data/index.json"];
+const FILES = ["/game/24/index.html", "/game/24/play.html", "/game/24/en.js", "/game/24/main.js", "/thesis/thesis.pdf", "/data/episodes.json", "/data/index.json",
+               "/robots.txt", "/sitemap.xml"];
 
 const fileFor = (url: string) => {
   const p = decodeURIComponent(url.split(/[?#]/)[0]);

@@ -96,8 +96,8 @@ export default function Home() {
             { href: "/compare/", icon: IconCompare, title: "Compare", text: "A win and a loss side by side, opened at the first turn where they act differently.", go: "compare two episodes" },
             { href: "/solver/", icon: IconTarget, title: "Exact solver", text: "The search that gives every floor its optimum, step by step, and why the published one reported 22 instead of 68.", go: "step through the search" },
             { href: "/prompt-optimisation/", icon: IconDna, title: "Prompt optimisation", text: "Every evolved prompt, the teacher's diagnosis, the validator's verdict and the held-out result.", go: "candidate by candidate" },
-            { href: "/tower/", icon: IconTower, title: "Tower", text: "Every tower run with the highest floor it reached, and the original 24-floor game to play.", go: "runs and the game" },
             { href: "/play/", icon: IconGamepad, title: "Play", text: "Any single floor on the thesis engine, with the exact solver's value of every action.", go: "play a floor" },
+            { href: "/tower/", icon: IconTower, title: "Tower Game", text: "The original 24-floor game in English, in the browser, and every tower run with the highest floor it reached.", go: "play the tower" },
             { href: "/thesis/", icon: IconBook, title: "Thesis", text: "The full text with linked references, the result cells behind each table, and the PDF.", go: "read the thesis" },
           ].map((c) => (
             <Link key={c.href} className="card-link" href={c.href}>

@@ -11,6 +11,10 @@ export const SITE = {
   siteRepo: "https://github.com/thetobysiu/mt-thesis",
 };
 
+/** Public origin: NEXT_PUBLIC_SITE_URL, else Vercel's production domain (set at build time on Vercel), else the default domain. */
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL
+  ?? (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "https://mt-thesis.vercel.app")).replace(/\/$/, "");
+
 export const BIBTEX = `@mastersthesis{siu2026magictower,
   author = {Siu, King Wai},
   title  = {${SITE.title}},
@@ -32,14 +36,18 @@ export const NAV: { group: string | null; items: NavItem[] }[] = [
   ] },
   { group: "Evidence", items: [
     { href: "/results/", label: "Results", icon: "table", ready: true },
-    { href: "/episodes/", label: "Episodes", icon: "replay", ready: true },      { href: "/compare/", label: "Compare", icon: "compare", ready: true },  ] },
+    { href: "/episodes/", label: "Episodes", icon: "replay", ready: true },
+    { href: "/compare/", label: "Compare", icon: "compare", ready: true },
+  ] },
   { group: "Explore", items: [
     { href: "/floors/", label: "Floors", icon: "map", ready: true },
     { href: "/solver/", label: "Exact solver", icon: "target", ready: true },
     { href: "/prompt-optimisation/", label: "Prompt optimisation", icon: "dna", ready: true },
-    { href: "/tower/", label: "Tower", icon: "tower", ready: true },
   ] },
-  { group: "Play", items: [{ href: "/play/", label: "Play", icon: "gamepad", ready: true }] },
+  { group: "Play", items: [
+    { href: "/play/", label: "Play", icon: "gamepad", ready: true },
+    { href: "/tower/", label: "Tower Game", icon: "tower", ready: true },
+  ] },
   { group: "Read", items: [
     { href: "/thesis/", label: "Thesis", icon: "book", ready: true },
     { href: "/glossary/", label: "Glossary", icon: "file", ready: true },

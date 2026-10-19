@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { AppShell } from "@/components/AppShell";
 import { THEME_INIT } from "@/components/ThemeToggle";
-import { SITE } from "@/lib/site";
+import { SITE, SITE_URL } from "@/lib/site";
 // fonts are bundled with the site (all subsets; the browser fetches only the ranges a page uses)
 import "@fontsource/fira-sans/400.css";
 import "@fontsource/fira-sans/500.css";
@@ -12,6 +12,7 @@ import "@fontsource/fira-code/600.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: { default: SITE.name, template: `%s · ${SITE.name}` },
   description: `${SITE.title}. ${SITE.degree}, ${SITE.university}: replays of every episode, the results behind each table, the exact solver and the prompt-optimisation runs.`,
   authors: [{ name: SITE.author }],
