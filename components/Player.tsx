@@ -91,6 +91,7 @@ export function Player({ id, text, optimum, title }: { id: string; text: string;
     while (k > 0 && h[k].assisted) k--;  // drop the last own decision with the assists that followed it
     return k > 0 ? h.slice(0, k) : h;
   });
+  const revertTo = (i: number) => setHistory((h) => h.slice(0, i + 1));
   const restart = () => setHistory(() => {
     const s0 = new GameState(floor);
     const { log } = withAssists(s0, assists);
@@ -163,16 +164,23 @@ export function Player({ id, text, optimum, title }: { id: string; text: string;
             {!actions.length && <p className="p-3 muted">No actions.</p>}
           </div>
         </Widget>
-        <Widget title="Turns" bodyClass="p-0" flush>
+        <Widget title="Turns" bodyClass="p-0" flush actions={<span className="muted text-[12px]">click a turn to revert to it</span>}>
           <div className="step-list max-h-[260px] overflow-auto">
-            {history.map((e, i) => (
-              <div key={i} className="step">
-                <span className="n">{i === 0 ? "▶" : e.state.turn}</span>
-                <span className="flex-1 truncate">{e.label}</span>
-                {e.assisted && <span className="tag">assisted</span>}
-                <span className="mono muted text-[12px] w-12 text-right">{e.hp}</span>
-              </div>
-            ))}
+            {history.map((e, i) => {
+              const last = i === history.length - 1;
+              const row = (
+                <>
+                  <span className="n">{i === 0 ? "▶" : e.state.turn}</span>
+                  <span className="flex-1 truncate">{e.label}</span>
+                  {e.assisted && <span className="tag">assisted</span>}
+                  <span className="mono muted text-[12px] w-12 text-right">{e.hp}</span>
+                </>
+              );
+              return last
+                ? <div key={i} className="step" aria-current="step">{row}</div>
+                : <button key={i} type="button" className="step w-full text-left" onClick={() => revertTo(i)}
+                          title={i === 0 ? "Revert to the start" : `Revert to after turn ${e.state.turn}`}>{row}</button>;
+            })}
           </div>
         </Widget>
         <p className="muted text-[13px]">
