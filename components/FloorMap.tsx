@@ -163,7 +163,7 @@ export function FloorMap({ map, hero, stats, removed, target, path, cell = 28, f
               const who = hero ?? stats;
               const dmg = who ? calcEnemyDmg(who, e) : (e.dmg != null && e.dmg < 999999999 ? e.dmg : null);
               const canWin = dmg != null && (who ? dmg < who.hp : e.canWin ?? true);
-              cls += canWin ? " text-green-300" : " text-red-300 font-bold";
+              if (who || enemyMetric !== "hp") cls += canWin ? " text-green-300" : " text-red-300 font-bold";
               sym = enemyMetric === "hp" ? String(e.hp) : dmg == null ? "!" : String(dmg);
               const sp = (e.specials ?? []).map((s) => SPECIAL_NAMES[s] ?? `#${s}`).join(", ");
               title = `${e.name} (${x},${y})\nHP ${e.hp}  ATK ${e.atk}  DEF ${e.def}  gold ${e.money ?? 0}${sp ? `\n${sp}` : ""}\n${dmg == null ? "CANNOT WIN at the hero's ATK" : `costs ${dmg} HP to kill now`}`;

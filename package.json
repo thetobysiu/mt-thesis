@@ -12,6 +12,7 @@
     "test": "vitest run",
     "data": "tsx scripts/build-data.ts",
     "thesis": "tsx scripts/build-thesis.ts",
+    "tower": "tsx scripts/build-tower-floors.ts",
     "smoke": "tsx scripts/smoke.ts"
   },
   "dependencies": {

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getEpisodes, getFloors, getResults } from "@/lib/data";
+import { TOWER_FLOORS } from "@/lib/floors";
 import { GEPA_RUNS } from "@/lib/gepa";
 import { NAV, SITE_URL } from "@/lib/site";
 import { getThesisChapters } from "@/lib/thesis";
@@ -14,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...getThesisChapters().map((c) => `/thesis/${c.slug}/`),
     ...GEPA_RUNS.map((r) => `/prompt-optimisation/${r.label}/`),
     ...getFloors().flatMap((f) => [`/floors/${f.id}/`, `/play/${f.id}/`]),
+    ...TOWER_FLOORS.map((id) => `/floors/${id}/`),
     ...getResults().cells.map((c) => `/results/${encodeURIComponent(c.label)}/`),
     ...getEpisodes().episodes.map((e) => `/episodes/${e.id}/`),
   ];

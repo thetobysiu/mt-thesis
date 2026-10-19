@@ -16,9 +16,10 @@ chooses one, and an exact solver knows each floor's optimum. The site shows the 
 - **Episodes**: replays of all 1,905 stored episodes and tower runs named by a result file (harness smoke tests excluded):
   map, observation, reasoning and answer at every turn, with the state value after each turn on single floors.
 - **Compare**: two episodes of one floor side by side, opened at the first turn where they act differently.
-- **Floors, exact solver, play**: the 21 single floors with their exact optima and routes, the most common winning
-  trajectory against the optimal route with the turn where it leaves it, the solver's search step by step in the
-  browser, and every floor playable on a TypeScript port of the engine with solver hints.
+- **Floors, exact solver, play**: the 21 single floors (simple, complex, hand-designed, generated) with their exact
+  optima and routes, the most common winning trajectory against the optimal route with the turn where it leaves it,
+  the 26 tower floors with their monsters and the tower runs that reached them, the solver's search step by step in
+  the browser, and every single floor playable on a TypeScript port of the engine with solver hints.
 - **Prompt optimisation**: every run of the thesis study candidate by candidate: prompt diff, teacher diagnosis,
   validator verdict, training episodes and held-out results.
 - **Tower Game**: the original 24-floor game in English, starting on MT0, and every tower run with its replay.
@@ -75,7 +76,9 @@ MT_THESIS=<thesis folder with chapters_v2/, chapters/bibliography.md, graphs/, f
 ```
 
 The original game under `public/game/24/` is a copy of the 24-floor tower's runtime (no editor, saves or docs),
-plus `play/index.html` and `en.js` (English text, direct start on MT0).
+plus `play/index.html` and `en.js` (English text, direct start on MT0). `npm run tower` derives
+`public/data/tower/floors.json` (the tower floors' maps, monsters and items, and each thesis tower run's first arrival
+on every floor) from that copy and the stored tower logs.
 
 ## Layout
 

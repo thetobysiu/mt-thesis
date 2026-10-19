@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import zlib from "node:zlib";
-import type { CellSummary, EpisodeEntry, EpisodeIndex, EpisodeValues, FloorEntry, FloorSolution, ResultsIndex } from "./data-types";
+import type { CellSummary, EpisodeEntry, EpisodeIndex, EpisodeValues, FloorEntry, FloorSolution, ResultsIndex, TowerFloors } from "./data-types";
 import type { RunLog } from "./types";
 
 const DATA = path.join(process.cwd(), "public", "data");
@@ -57,4 +57,10 @@ export function cellEpisodes(label: string): EpisodeEntry[] {
   const cell = getCell(label);
   if (!cell) return [];
   return cell.runs.map((r) => (r.episode ? getEpisode(r.episode) : undefined)).filter((e): e is EpisodeEntry => !!e);
+}
+
+let tower: TowerFloors | null = null;
+export function getTowerFloors(): TowerFloors {
+  tower ??= JSON.parse(fs.readFileSync(path.join(DATA, "tower", "floors.json"), "utf8")) as TowerFloors;
+  return tower;
 }

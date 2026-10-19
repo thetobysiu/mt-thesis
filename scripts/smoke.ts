@@ -7,7 +7,8 @@ const OUT = path.resolve("out");
 const PAGES: [string, string][] = [
   ["/", "Main findings"], ["/tour/", "eleven steps"], ["/tour/one-decision/", "One decision"], ["/journey/", "From single episodes"],
   ["/results/", "Results"], ["/episodes/", "Episodes"], ["/compare/", "Compare two episodes"], ["/floors/", "simple"],
-  ["/floors/simple/", "leaves the optimal route here"], ["/solver/", "step by step"], ["/play/", "Play a floor"], ["/play/simple/", "Simple"],
+  ["/floors/simple/", "leaves the optimal route here"], ["/floors/MT3/", "first turn here"], ["/solver/", "step by step"],
+  ["/play/", "Play a floor"], ["/play/simple/", "Simple"],
   ["/prompt-optimisation/", "The loop"], ["/prompt-optimisation/gs2_dsv4flash_bare/", "Candidate"], ["/tower/", "Tower Game"],
   ["/thesis/", "Cite"], ["/thesis/experiments/", "Table 6.5"], ["/glossary/", "Exact solver"], ["/about/", "Privacy notice"],
 ];

@@ -3,22 +3,25 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { RoutePlayer } from "@/components/RoutePlayer";
 import { getEpisodes, getFloors, getFloorText, getSolution } from "@/lib/data";
-import { floorBlurb, floorTitle } from "@/lib/floors";
+import { floorBlurb, floorTitle, TOWER_FLOORS, towerFloorTitle } from "@/lib/floors";
 import { modelName, pct } from "@/lib/format";
 import { compareWithRoute } from "@/lib/route-compare";
+import { TowerFloorView } from "./TowerFloorView";
 
 export const dynamicParams = false;
 export function generateStaticParams() {
-  return getFloors().map((f) => ({ id: f.id }));
+  return [...getFloors().map((f) => ({ id: f.id })), ...TOWER_FLOORS.map((id) => ({ id }))];
 }
 
 type Params = { params: Promise<{ id: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  return { title: floorTitle((await params).id) };
+  const { id } = await params;
+  return { title: TOWER_FLOORS.includes(id) ? `${id} · ${towerFloorTitle(id)} of the tower` : floorTitle(id) };
 }
 
 export default async function FloorPage({ params }: Params) {
   const { id } = await params;
+  if (TOWER_FLOORS.includes(id)) return <TowerFloorView id={id} />;
   const f = getFloors().find((x) => x.id === id);
   if (!f) notFound();
   const text = getFloorText(id);

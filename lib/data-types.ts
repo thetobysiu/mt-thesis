@@ -67,3 +67,15 @@ export type SolutionData = { hp: number | null; solvable: boolean; states: numbe
 export type FloorSolution = { id: string; exact: SolutionData; published: SolutionData };
 /** public/data/values/<episode>.json */
 export type EpisodeValues = { id: string; floor: string; optimum: number | null; values: { turn: number; value: number | null }[] };
+
+/** public/data/tower/floors.json: the tower's maps as the game starts them, and each thesis tower run's first arrival per floor. */
+export type TowerFloor = {
+  id: string; width: number; height: number; grid: number[][];
+  monsters: { key: string; name: string; hp: number; atk: number; def: number; money: number; exp: number; specials: number[]; count: number }[];
+  items: { key: string; name: string; effect: string; count: number }[];
+  doors: { yellow: number; blue: number; red: number };
+  hero: { x: number; y: number; hp: number; atk: number; def: number } | null;
+};
+export type TowerArrival = { turn: number; hp: number; atk: number; def: number };
+export type TowerRun = { episode: string; cell: string; model: string | null; success: boolean | null; maxFloor: string | null; arrivals: Record<string, TowerArrival> };
+export type TowerFloors = { tiles: Record<string, import("./types").MapCell>; floors: TowerFloor[]; runs: TowerRun[] };
