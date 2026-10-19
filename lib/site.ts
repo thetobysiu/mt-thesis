@@ -11,6 +11,16 @@ export const SITE = {
   siteRepo: "https://github.com/thetobysiu/mt-thesis",
 };
 
+export const BIBTEX = `@mastersthesis{siu2026magictower,
+  author = {Siu, King Wai},
+  title  = {${SITE.title}},
+  school = {${SITE.university}},
+  type   = {Master's thesis (M.Sc. Data Science)},
+  year   = {2026},
+  note   = {Submitted, not yet graded},
+  url    = {${SITE.siteRepo}}
+}`;
+
 export type NavItem = { href: string; label: string; icon: string; ready: boolean };
 
 // Pages not built yet stay visible (marked "soon") so the site's structure is clear from the start.
@@ -31,9 +41,9 @@ export const NAV: { group: string | null; items: NavItem[] }[] = [
   ] },
   { group: "Play", items: [{ href: "/play/", label: "Play", icon: "gamepad", ready: true }] },
   { group: "Read", items: [
-    { href: "/thesis/", label: "Thesis", icon: "book", ready: false },
-    { href: "/glossary/", label: "Glossary", icon: "file", ready: false },
-    { href: "/about/", label: "About", icon: "info", ready: false },
+    { href: "/thesis/", label: "Thesis", icon: "book", ready: true },
+    { href: "/glossary/", label: "Glossary", icon: "file", ready: true },
+    { href: "/about/", label: "About", icon: "info", ready: true },
   ] },
 ];
 

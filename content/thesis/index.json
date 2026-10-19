@@ -1,0 +1,95 @@
+{
+  "copied": "2026-10-19T01:54:54.219Z",
+  "chapters": [
+    {
+      "slug": "abstract",
+      "title": "Abstract",
+      "source": "chapters_v2/00_abstract.md"
+    },
+    {
+      "slug": "nomenclature",
+      "title": "Nomenclature",
+      "source": "chapters_v2/00b_nomenclature.md"
+    },
+    {
+      "slug": "introduction",
+      "title": "Chapter 1: Introduction",
+      "source": "chapters_v2/01_introduction.md"
+    },
+    {
+      "slug": "foundations",
+      "title": "Chapter 2: Foundations",
+      "source": "chapters_v2/02_foundations.md"
+    },
+    {
+      "slug": "related-work",
+      "title": "Chapter 3: Related Work",
+      "source": "chapters_v2/03_related_work.md"
+    },
+    {
+      "slug": "task-and-environment",
+      "title": "Chapter 4: Task and Environment",
+      "source": "chapters_v2/04_task_environment.md"
+    },
+    {
+      "slug": "method",
+      "title": "Chapter 5: Method",
+      "source": "chapters_v2/05_method.md"
+    },
+    {
+      "slug": "experiments",
+      "title": "Chapter 6: Experiments",
+      "source": "chapters_v2/06_experiments.md"
+    },
+    {
+      "slug": "discussion-and-conclusion",
+      "title": "Chapter 7: Discussion and Conclusion",
+      "source": "chapters_v2/07_discussion_conclusion.md"
+    },
+    {
+      "slug": "bibliography",
+      "title": "Bibliography",
+      "source": "chapters/bibliography.md"
+    },
+    {
+      "slug": "appendix-a",
+      "title": "Appendix A: Prompts and Observation",
+      "source": "chapters_v2/08_appendix_a_prompts.md"
+    },
+    {
+      "slug": "appendix-b",
+      "title": "Appendix B: Combat Rules, Exact Solver and Floors",
+      "source": "chapters_v2/09_appendix_b_solver_floors.md"
+    },
+    {
+      "slug": "appendix-c",
+      "title": "Appendix C: The Evaluation Platform",
+      "source": "chapters_v2/10_appendix_c_platform.md"
+    },
+    {
+      "slug": "appendix-d",
+      "title": "Appendix D: Configuration and Result Files",
+      "source": "chapters_v2/11_appendix_d_configuration.md"
+    },
+    {
+      "slug": "appendix-e",
+      "title": "Appendix E: Validity Incidents",
+      "source": "chapters_v2/12_appendix_e_incidents.md"
+    },
+    {
+      "slug": "appendix-f",
+      "title": "Appendix F: Prompt Lineage",
+      "source": "chapters_v2/13_appendix_f_lineage.md"
+    },
+    {
+      "slug": "appendix-g",
+      "title": "Appendix G: Reasoning Excerpts",
+      "source": "chapters_v2/14_appendix_g_reasoning.md"
+    },
+    {
+      "slug": "ai-usage",
+      "title": "Note on AI Usage",
+      "source": "chapters_v2/15_ai_usage_declaration.md"
+    }
+  ]
+}

@@ -33,8 +33,10 @@ function Crumbs({ path }: { path: string }) {
         : <>
             <Link href={`/${section}/`}>{SECTION_LABELS[section] ?? section}</Link>
             <IconChevronRight />
-            <span className={`here ${section === "tour" ? "" : "mono"}`} aria-current="page">
-              {section === "tour" ? TOUR.find((c) => c.slug === parts[1])?.title ?? parts[1] : decodeURIComponent(parts[parts.length - 1])}
+            <span className={`here ${section === "tour" || section === "thesis" ? "" : "mono"}`} aria-current="page">
+              {section === "tour" ? TOUR.find((c) => c.slug === parts[1])?.title ?? parts[1]
+                : section === "thesis" ? parts[1].replace(/^appendix-([a-g])$/, (_m, l: string) => `Appendix ${l.toUpperCase()}`).replace(/-/g, " ").replace(/^./, (c) => c.toUpperCase())
+                : decodeURIComponent(parts[parts.length - 1])}
             </span>
           </>}
     </nav>

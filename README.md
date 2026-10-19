@@ -18,9 +18,11 @@ chooses one, and an exact solver knows each floor's optimum. The site shows the 
 - **Compare**: two episodes of one floor side by side, opened at the first turn where they act differently.
 - **Floors, exact solver, play**: the 21 single floors with their exact optima and routes, the solver's search step by
   step in the browser, and every floor playable on a TypeScript port of the engine with solver hints.
-
-Still to come (in this order): the prompt-optimisation runs, the tower page with the original game, the thesis chapters,
-the glossary and the about page.
+- **Prompt optimisation**: every run of the thesis study candidate by candidate: prompt diff, teacher diagnosis,
+  validator verdict, training episodes and held-out results.
+- **Tower**: every tower run with its replay, and the original 24-floor game playable in the browser.
+- **Thesis**: the full text with cross-references, table captions linked to their result cells, glossary hovers,
+  KaTeX math and the submitted PDF; the glossary; imprint, privacy notice and citation on the about page.
 
 The site is a static export with no server and no model calls ([ADR 0001](docs/adr/0001-static-replay-only-site.md)).
 The vocabulary follows the thesis glossary ([GLOSSARY.md](GLOSSARY.md)).
@@ -56,13 +58,24 @@ MT_AI_LAB=../mt-ai-lab MT_PYTHON=<python that can import mt-ai-lab> npm run data
 Local paths are reduced to file names and key-like fields are dropped; `tests/data.test.ts` fails if a path,
 home directory or key pattern remains.
 
+The thesis text, figures, glossary and PDF are copied from the thesis workspace into `content/thesis/`,
+`public/thesis/` and `GLOSSARY.md`:
+
+```sh
+MT_THESIS=<thesis folder with chapters_v2/, chapters/bibliography.md, graphs/, figures/, latex/main.pdf> npm run thesis
+```
+
+The original game under `public/game/24/` is a copy of the 24-floor tower's runtime (no editor, saves or docs).
+
 ## Layout
 
 ```
-app/            pages (App Router): /, /tour, /journey, /results, /episodes, /compare, /floors, /solver, /play
-components/     FloorMap (copied from mt-ai-lab), EpisodeViewer, CompareView, SolverExplorer, Player, tour/…
-lib/            run.ts (replay core), engine/ (TypeScript port of the engine), solver/ (exact solver, worker), data loaders
-scripts/        build-data.ts, build-floors.ts (Java optima), build-solutions.ts (routes, state values)
+app/            pages (App Router): /, /tour, /journey, /results, /episodes, /compare, /floors, /solver, /play,
+                /prompt-optimisation, /tower, /thesis, /glossary, /about
+components/     FloorMap (copied from mt-ai-lab), EpisodeViewer, CompareView, SolverExplorer, Player, GepaRunView, tour/…
+lib/            run.ts (replay core), engine/ (TypeScript port of the engine), solver/ (exact solver, worker), gepa.ts,
+                thesis.ts (Markdown + KaTeX), data loaders
+scripts/        build-data.ts, build-floors.ts (Java optima), build-solutions.ts (routes, state values), build-thesis.ts
 tests/          vitest (the solver test searches the simple floor only)
 docs/adr/       architecture decisions
 ```
