@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { EpisodeViewer } from "@/components/EpisodeViewer";
 import { Outcome } from "@/components/Outcome";
-import { getEpisode, getEpisodes, getFloors } from "@/lib/data";
+import { getCell, getEpisode, getEpisodes, getFloors } from "@/lib/data";
 import { modelName, pct, scenarioName } from "@/lib/format";
 
 export const dynamicParams = false;
@@ -27,6 +27,7 @@ export default async function EpisodePage({ params }: Params) {
   const cellLabel = e.cells[0]?.label;
   const mates = !e.tower && cellLabel ? getEpisodes().episodes.filter((x) => x.id !== e.id && x.floor === e.floor && x.cells.some((c) => c.label === cellLabel)) : [];
   const partner = mates.find((x) => !!x.success !== !!e.success) ?? mates[0];
+  const bare = e.cells.some((c) => /(^|_)bare(_|$)/.test(c.label) || getCell(c.label)?.env?.MOTA_BARE_OBS === "1");
   return (
     <div className="page page-wide">
       <section className="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -49,6 +50,15 @@ export default async function EpisodePage({ params }: Params) {
           {partner && <>{" · "}<Link className="link" href={`/compare/?a=${e.id}&b=${partner.id}`}>compare with another episode of this cell</Link></>}
         </span>
       </section>
+      {bare && (
+        <p className="panel p-3 text-[13px] max-w-[120ch]">
+          <span className="tag tag-warn">bare observation</span>{" "}
+          This episode ran with the bare observation (<Link className="link" href="/thesis/method/#s-5-2-7">Section 5.2.7</Link>). At each
+          decision the model saw its stats, the remaining items, the boss and the legal actions with their exact cost, and its system prompt
+          lists the floor&apos;s monsters, items and doors by coordinate. It saw no walls and no lookahead tree, so where its reasoning says a
+          fight &ldquo;leads&rdquo; is its own guess from coordinates; under the full observation the engine&apos;s tree states what each action opens.
+        </p>
+      )}
       <EpisodeViewer id={e.id} floor={getFloors().some((f) => f.id === e.floor) ? e.floor : null} />
     </div>
   );
