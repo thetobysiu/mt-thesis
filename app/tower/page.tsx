@@ -33,6 +33,7 @@ const KEYS: [string, string][] = [
   ["T / Q", "items / equipment"],
   ["PgUp / PgDn", "look at the maps of other floors"],
   ["Esc", "menu (settings, statistics, restart)"],
+  ["N", "start over on MT0"],
   ["Space or Enter", "confirm; advance dialogue"],
 ];
 
@@ -103,14 +104,19 @@ export default function TowerPage() {
       <section id="play" className="flex flex-col gap-3 scroll-mt-20" aria-labelledby="play-h">
         <h2 id="play-h">Play the original game</h2>
         <p className="max-w-[85ch]">
-          This is the original HTML5 game the engine reads its data from (24-floor sample tower of ckcz123/mota-js, BSD 3-Clause), unchanged and in
-          Chinese. It plays music once started. The title menu reads <b>开始游戏</b> start game, <b>载入游戏</b> load a save, <b>录像回放</b> replay a recording.
+          This is the original HTML5 game the engine reads its data from (24-floor sample tower of ckcz123/mota-js, BSD 3-Clause), with an English
+          layer added for this site. It starts on MT0 straight away: the opening is skipped and the fairy&apos;s three keys are already given, as in
+          the thesis engine, and the game runs in the original&apos;s express mode (no battle animation; a weak floor teleporter is in the inventory).
+          It plays music once you interact with it.
         </p>
         <div className="grid gap-[var(--gap)] xl:grid-cols-[minmax(0,1fr)_22rem]">
           <div className="panel p-2">
-            <iframe src="/game/24/index.html" title="24-floor Magic Tower (original game)" className="w-full rounded border-0 bg-black" style={{ aspectRatio: "4 / 3", minHeight: 420 }}
+            <iframe src="/game/24/play.html" title="24-floor Magic Tower (original game, English)" className="w-full rounded border-0 bg-black" style={{ aspectRatio: "4 / 3", minHeight: 420 }}
                     allow="autoplay; fullscreen" loading="lazy" />
-            <p className="text-[12px] muted mt-1">Click into the game before using the keyboard. <a className="link" href="/game/24/index.html" target="_blank" rel="noopener">Open full screen</a>.</p>
+            <p className="text-[12px] muted mt-1">
+              Click into the game before using the keyboard. <a className="link" href="/game/24/play.html" target="_blank" rel="noopener">Open full screen</a>
+              {" · "}<a className="link" href="/game/24/index.html" target="_blank" rel="noopener">the untouched original</a> (Chinese, with its title screen and mode choice).
+            </p>
           </div>
           <div className="panel p-3 flex flex-col gap-2 text-[13px]">
             <b>Controls</b>

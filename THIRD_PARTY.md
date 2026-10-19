@@ -9,6 +9,8 @@ its own licence and attribution.
   (copied from mt-ai-lab, which copied them unchanged from the game data), and the playable game under
   `public/game/24/` (index.html, main.js, styles.css, logo.png, libs/, project/, extensions/ of the thesis
   workspace's copy of the 24-floor tower, unchanged; the editor, saves and documentation are not included).
+  `public/game/24/play.html` and `public/game/24/en.js` are additions of this site (MIT): an English layer that
+  translates the game's text at runtime and starts a new game on MT0; the original files are not modified.
 - **Source:** the 24-floor sample tower of the HTML5 Magic Tower template, version 2.10.3,
   https://github.com/ckcz123/mota-js
 - **Licence:** BSD 3-Clause, reproduced below.
