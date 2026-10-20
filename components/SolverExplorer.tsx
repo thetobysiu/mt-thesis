@@ -7,7 +7,7 @@ import Link from "next/link";
 import { MapSkinSelect, TileLayer, useMapSkin, type MapSkin } from "./FloorMap";
 import { IconNext, IconPause, IconPlay, IconPrev, IconSkipEnd, IconSkipStart } from "./Icons";
 import { Stat, Widget } from "./Widget";
-import type { FloorSolution, RouteStepData } from "@/lib/data-types";
+import type { FloorSolution } from "@/lib/data-types";
 import { parseFloor, type FloorDef } from "@/lib/engine/floor";
 import { floorMapData } from "@/lib/engine/mapdata";
 import { itemTable } from "@/lib/engine/state";
@@ -243,7 +243,8 @@ function SolverRun({ floor, mode, skin }: { floor: SolverFloor; mode: Mode; skin
   }))) : null, [g, finished, best]);
   const rp = useReplay(replay?.route.length ?? 0);
   const shown = finished ? best : snap.current;
-  const view = useMemo(() => replay ? replay.frames[rp.at] : viewOf(g, snap.current), [g, replay, rp.at, snap.current]);
+  const current = snap.current;
+  const view = useMemo(() => replay ? replay.frames[rp.at] : viewOf(g, current), [g, replay, rp.at, current]);
   const route: RouteRow[] = replay ? replay.route : shown ? shown.route.filter((r) => r.kind === "decision")
     .map((r) => ({ nodes: g.list.filter((m) => m.id === r.nodeId), hp: r.hero.hp })) : [];
   const startHero = g.list[0].hero!;
@@ -472,7 +473,7 @@ function SearchGraph({ g, def, view, name, skin, hero }: { g: Graph; def: FloorD
         Items next to each other are merged into one node (dashed lines), as are chains of monsters and doors with nothing else attached.
         Lines join nodes the hero can walk between. Numbers give the order of the decisions in the state shown ({tiles ? "the hero marks the start" : "@ = start"}; items picked up
         on the way are not numbered): the state just taken from the queue, and once the search ends the best state. Gold ring: the nodes it
-        can take next. The number on a monster is the HP it costs to kill at the hero's current stats (green: affordable, red: not, !: cannot
+        can take next. The number on a monster is the HP it costs to kill at the hero&apos;s current stats (green: affordable, red: not, !: cannot
         be beaten). Hover a tile for its node and monster stats.
       </p>
     </Widget>
