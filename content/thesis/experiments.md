@@ -483,9 +483,9 @@ The effect is carried by two floors, gen08 and gen12, on which the rules-only pr
 The four trial floors, chosen because the rewrite had won them, contribute 4 : 0 of the discordant pairs, so the test is not independent of that choice.
 On the nine floors not used in the trial, the discordant pairs are 3 : 1 and the kills 18 against 16 ($p = 0.31$; Figure 6.3), which does not separate the two prompts.
 
-![Paired confirmation per floor](/thesis/img/6.3.png)
+![Paired test per floor](/thesis/img/6.3.png)
 
-**Figure 6.3:** Paired confirmation of the evolved prompt for DeepSeek-V4-Flash (no thinking) under the bare observation: kills out of three episodes per generated floor for the rules-only and the evolved prompt. Arrows mark floors on which the two differ; grey floors belong to the earlier trial after which the rewrite was taken to confirmation.
+**Figure 6.3:** Paired test of the evolved prompt for DeepSeek-V4-Flash (no thinking) under the bare observation: kills out of three episodes per generated floor for the rules-only and the evolved prompt. Arrows mark floors on which the two differ; grey floors belong to the earlier trial on which the rewrite was selected and are part of the test.
 
 **The complex floor.**
 A further pre-registered run started the optimiser from the hand-written single-floor prompt on the complex floor alone (Qwen3.6-35B, full observation, six evaluations of two episodes each).
