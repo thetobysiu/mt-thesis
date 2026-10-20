@@ -9,7 +9,7 @@ import { parseFloor } from "@/lib/engine/floor";
 import { floorMapData } from "@/lib/engine/mapdata";
 import { itemTable, posKey } from "@/lib/engine/state";
 
-export function RoutePlayer({ id, text, solution }: { id: string; text: string; solution: FloorSolution }) {
+export function RoutePlayer({ id, text, solution, fill = false }: { id: string; text: string; solution: FloorSolution; fill?: boolean }) {
   const floor = useMemo(() => parseFloor(id, text), [id, text]);
   const map = useMemo(() => floorMapData(floor), [floor]);
   const items = useMemo(() => itemTable(floor), [floor]);
@@ -48,8 +48,9 @@ export function RoutePlayer({ id, text, solution }: { id: string; text: string; 
   const decisions = steps.filter((s) => s.kind === "decision").length;
 
   return (
-    <div className="grid gap-[var(--gap)] lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
-      <Widget title="Route on the map" className="min-h-[560px]" bodyClass="flex-1 min-h-0 flex flex-col gap-2"
+    <div className={fill ? "grid gap-[var(--gap)] grid-cols-[minmax(0,1fr)_340px] h-full min-h-0" : "grid gap-[var(--gap)] lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start"}
+         data-demo={fill || undefined}>
+      <Widget title="Route on the map" className={fill ? "min-h-0" : "min-h-[560px]"} bodyClass="flex-1 min-h-0 flex flex-col gap-2"
               actions={<div className="tabs" role="tablist" aria-label="solver">
                 <button role="tab" aria-selected={mode === "exact"} className="btn btn-sm" onClick={() => { setMode("exact"); setIdx(0); }}>exact solver</button>
                 <button role="tab" aria-selected={mode === "published"} className="btn btn-sm" onClick={() => { setMode("published"); setIdx(0); }}>published solver</button>
@@ -60,7 +61,7 @@ export function RoutePlayer({ id, text, solution }: { id: string; text: string; 
           <Stat label="Keys" value={hero ? `${hero.keys.yellow} / ${hero.keys.blue} / ${hero.keys.red}` : "–"} sub="yellow / blue / red" />
           <Stat label="Step" value={`${at} / ${last}`} sub={`${decisions} decisions`} />
         </div>
-        <div className="h-[clamp(360px,70vh,720px)] shrink-0">
+        <div className={fill ? "flex-1 min-h-0" : "h-[clamp(360px,70vh,720px)] shrink-0"}>
           <FloorMap map={map} hero={hero} removed={removed} path={step?.tiles.map((t) => [t.x, t.y]) ?? null} fit minCell={14} maxCell={60} />
         </div>
         <div className="flex flex-col gap-2">
@@ -74,16 +75,16 @@ export function RoutePlayer({ id, text, solution }: { id: string; text: string; 
             <button className="btn btn-sm" onClick={() => { setPlaying(false); setIdx(last); }} aria-label="end"><IconSkipEnd /></button>
           </div>
         </div>
-        <MapLegend />
+        {!fill && <MapLegend />}
       </Widget>
-      <Widget title={`${mode === "exact" ? "Exact" : "Published"} route · ${sol.hp ?? "no win"} HP`} bodyClass="p-0" flush>
+      <Widget title={`${mode === "exact" ? "Exact" : "Published"} route · ${sol.hp ?? "no win"} HP`} bodyClass={fill ? "p-0 flex-1 min-h-0 flex flex-col" : "p-0"} flush className={fill ? "min-h-0" : ""}>
         <p className="px-3 pt-2 pb-1 muted text-[13px]">
           {mode === "exact"
             ? "Every decision clears a door or fight node; items and fights that cost nothing are taken automatically (\"auto\")."
             : "The released solver keeps only the first state it takes from the queue for each cleared set, so it can miss the optimum."}
           {" "}{sol.states.toLocaleString("en")} states expanded.
         </p>
-        <div className="step-list max-h-[640px] overflow-auto">
+        <div className={`step-list overflow-auto ${fill ? "flex-1 min-h-0" : "max-h-[640px]"}`}>
           {steps.map((s, i) => (
             <button key={i} type="button" className={`step w-full text-left ${i === at ? "active" : ""}`} onClick={() => { setPlaying(false); setIdx(i); }}>
               <span className="n">{i}</span>

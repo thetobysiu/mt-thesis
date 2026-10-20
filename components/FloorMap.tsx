@@ -42,6 +42,9 @@ const S = SPRITES as unknown as {
 };
 const GROUND = S.tiles["0"];
 
+// a fixed tooltip inside a CSS-zoomed stage is positioned in zoomed pixels
+const cssZoom = (el: Element) => (el as Element & { currentCSSZoom?: number }).currentCSSZoom ?? 1;
+
 function spriteFor(c: MapCell): Sprite | null {
   if (c.id != null && S.tiles[String(c.id)]) return S.tiles[String(c.id)];
   switch (c.t) {  // logs recorded before cells carried their tile number
@@ -214,8 +217,8 @@ export function FloorMap({ map, hero, stats, removed, target, path, cell = 28, f
                 data-x={x} data-y={y} data-t={t} data-actionable={actionable || undefined} data-removed={isRemoved || undefined}
                 className={`relative flex items-center justify-center font-mono ${game ? "" : "rounded-[2px]"} ${cls}`}
                 style={style}
-                onMouseEnter={(e) => setTip({ x: e.clientX, y: e.clientY, text: actionable ? `${title}\n\u2192 click to take this action` : title })}
-                onMouseMove={(e) => setTip((tp) => (tp ? { ...tp, x: e.clientX, y: e.clientY } : tp))}
+                onMouseEnter={(e) => { const z = cssZoom(e.currentTarget); setTip({ x: e.clientX / z, y: e.clientY / z, text: actionable ? `${title}\n\u2192 click to take this action` : title }); }}
+                onMouseMove={(e) => { const z = cssZoom(e.currentTarget); setTip((tp) => (tp ? { ...tp, x: e.clientX / z, y: e.clientY / z } : tp)); }}
                 onClick={onCellClick && (actionable || !highlight) ? () => onCellClick(x, y, c) : undefined}
               >
                 {sym}

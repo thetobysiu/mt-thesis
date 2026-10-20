@@ -315,6 +315,64 @@ mark { background: var(--mark); color: inherit; border-radius: 2px; padding: 0 1
 .tour-progress a.on { background: var(--gold); }
 .tour-progress a:hover { background: var(--gold); }
 
+/* 16:9 stage (walkthrough, presentation): a 1280 × 720 canvas scaled with zoom */
+.stage { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; background: var(--bg); border: 1px solid var(--border-soft); border-radius: var(--radius); }
+.stage-canvas { position: absolute; left: 0; top: 0; overflow: hidden; }
+.stage-host { position: relative; width: 100%; }
+.stage-host:fullscreen { background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.stage-host:fullscreen .stage { width: min(100vw, calc(100vh * 16 / 9)); border: 0; border-radius: 0; }
+.capture .sprite-anim2 { animation: none; }
+.capture .stage { border: 0; border-radius: 0; }
+.capture body { overflow: hidden; }
+
+/* slides: px sizes on the 1280 × 720 canvas */
+.slide { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 26px 40px 12px; gap: 14px; }
+.slide-head { display: flex; align-items: flex-end; gap: 16px; }
+.slide-title { font-family: var(--font-mono); font-size: 27px; font-weight: 600; line-height: 1.15; letter-spacing: -0.01em; margin: 0; }
+.slide-tag { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.slide-rule { width: 110px; height: 4px; border-radius: 2px; background: var(--gold); margin-top: -6px; }
+.slide-body { flex: 1; min-height: 0; font-size: 17px; line-height: 1.45; }
+.slide-foot { display: flex; gap: 12px; font-size: 11px; color: var(--muted); border-top: 1px solid var(--border-soft); padding-top: 6px; }
+.sl-bul { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 9px; }
+.sl-bul li::marker { color: var(--gold); }
+.sl-bul b { color: var(--text); }
+.sl-card { background: var(--panel); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; border-top: 4px solid var(--accent-c, var(--gold)); }
+.sl-card > .t { font-weight: 600; color: var(--accent-c, var(--gold)); font-size: 16px; }
+.sl-stat { background: var(--panel); border: 1px solid var(--border-soft); border-left: 5px solid var(--accent-c, var(--gold)); border-radius: var(--radius); padding: 10px 14px; display: flex; flex-direction: column; gap: 2px; }
+.sl-stat .v { font-family: var(--font-mono); font-size: 34px; font-weight: 600; line-height: 1.05; color: var(--accent-c, var(--gold)); }
+.sl-stat .k { font-size: 13px; color: var(--muted); }
+.sl-banner { background: var(--panel-2); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 10px 16px; font-weight: 600; text-align: center; }
+.sl-tbl { border-collapse: collapse; width: 100%; font-size: 14px; }
+.sl-tbl th, .sl-tbl td { border-bottom: 1px solid var(--border-soft); padding: 5px 8px; text-align: left; vertical-align: middle; }
+.sl-tbl th { background: var(--panel-2); font-weight: 600; font-size: 13px; }
+.sl-tbl td.c, .sl-tbl th.c { text-align: center; }
+.sl-good { background: color-mix(in srgb, var(--ok) 16%, transparent); }
+.sl-bad { background: color-mix(in srgb, var(--bad) 14%, transparent); }
+.sl-code { font-family: var(--font-mono); font-size: 12.5px; line-height: 1.5; white-space: pre; background: var(--bg-2); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); padding: 10px 12px; overflow: auto; font-variant-ligatures: none; }
+.sl-img { width: 100%; height: 100%; object-fit: contain; border-radius: var(--radius-sm); background: #fff; }
+.sl-dark { background: #0B1220; color: #F1F5F9; }
+
+/* presentation chrome */
+.deck-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.deck-black { position: absolute; inset: 0; background: #000; z-index: 5; }
+.deck-overview { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.deck-overview button { text-align: left; font: inherit; color: inherit; background: var(--panel); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); padding: 8px 10px; cursor: pointer; display: flex; flex-direction: column; gap: 2px; }
+.deck-overview button[aria-current="true"] { border-color: var(--gold); box-shadow: inset 0 0 0 1px var(--gold); }
+.deck-overview .n { font-family: var(--font-mono); font-size: 12px; color: var(--gold); }
+.notes { white-space: pre-wrap; font-size: 18px; line-height: 1.55; }
+
+/* walkthrough */
+.wt-caption { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); width: max-content; max-width: 1100px; padding: 7px 16px; border-radius: 8px; background: rgba(5, 9, 18, 0.84); color: #F8FAFC; font-size: 20px; line-height: 1.35; text-align: center; }
+.wt-controls { position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 4px; padding: 6px 10px 8px; background: linear-gradient(transparent, rgba(5, 9, 18, 0.88) 40%); color: #F8FAFC; opacity: 0; transition: opacity var(--t); }
+.stage:hover .wt-controls, .stage:focus-within .wt-controls, .wt-controls.show { opacity: 1; }
+.wt-track { position: relative; height: 18px; cursor: pointer; }
+.wt-track input[type="range"] { position: absolute; inset: 0; width: 100%; margin: 0; }
+.wt-mark { position: absolute; top: 1px; width: 2px; height: 16px; background: rgba(248, 250, 252, 0.55); pointer-events: none; }
+.wt-mark.try { width: 8px; height: 8px; top: 5px; border-radius: 50%; background: var(--gold); margin-left: -3px; }
+.wt-controls .btn { background: rgba(15, 23, 42, 0.7); color: #F8FAFC; border-color: rgba(148, 163, 184, 0.45); }
+.wt-try { position: absolute; inset: 0; z-index: 6; background: var(--bg); display: flex; flex-direction: column; padding: 16px 18px; gap: 10px; }
+.wt-chip { position: absolute; right: 18px; top: 16px; z-index: 4; display: flex; gap: 8px; align-items: center; padding: 8px 10px; border-radius: 10px; background: rgba(5, 9, 18, 0.88); border: 1px solid var(--gold); color: #F8FAFC; font-size: 14px; }
+
 /* journey timeline */
 .journey { position: relative; display: flex; flex-direction: column; gap: 18px; padding-left: 22px; }
 .journey::before { content: ""; position: absolute; left: 6px; top: 6px; bottom: 6px; width: 2px; background: var(--border-soft); }

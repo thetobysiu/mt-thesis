@@ -10,7 +10,7 @@ import { GameState, posKey, type Action } from "@/lib/engine/state";
 import { stateText } from "@/lib/solver/solver";
 import { stateValues } from "@/lib/solver/client";
 
-function untilDecision(s: GameState): GameState {
+export function untilDecision(s: GameState): GameState {
   let cur = s;
   for (let guard = 0; guard < 200 && !cur.goalReached && !cur.failed; guard++) {
     const a = cur.assist();
@@ -22,7 +22,7 @@ function untilDecision(s: GameState): GameState {
   return cur;
 }
 
-export function DecisionQuiz({ text, replayHref }: { text: string; replayHref: string | null }) {
+export function DecisionQuiz({ text, replayHref, fill = false }: { text: string; replayHref: string | null; fill?: boolean }) {
   const floor = useMemo(() => parseFloor("simple", text), [text]);
   const map = useMemo(() => floorMapData(floor), [floor]);
   const state = useMemo(() => untilDecision(new GameState(floor)), [floor]);
@@ -54,15 +54,16 @@ export function DecisionQuiz({ text, replayHref }: { text: string; replayHref: s
   const describe = (a: Action) => a.type === "fight" ? `${a.damage} HP` : a.type === "door" ? "uses a yellow key" : "";
 
   return (
-    <div className="grid gap-[var(--gap)] lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:items-start" data-testid="decision-quiz">
-      <div className="panel p-3 min-h-[360px] flex flex-col gap-2">
+    <div className={fill ? "grid gap-[var(--gap)] grid-cols-[minmax(0,1fr)_minmax(0,26rem)] h-full min-h-0" : "grid gap-[var(--gap)] lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:items-start"}
+         data-testid="decision-quiz" data-demo={fill || undefined}>
+      <div className={`panel p-3 flex flex-col gap-2 ${fill ? "min-h-0" : "min-h-[360px]"}`}>
         <div className="text-[13px] mono muted">HP {h.hp} · ATK {h.atk} · DEF {h.def} · yellow keys {h.yellow} · at ({h.x},{h.y})</div>
-        <div className="h-[clamp(320px,65vh,640px)] shrink-0">
+        <div className={fill ? "flex-1 min-h-0" : "h-[clamp(320px,65vh,640px)] shrink-0"}>
           <FloorMap map={map} hero={heroOf(state)} removed={state.removed} fit minCell={18} maxCell={52}
                     highlight={highlight} labels={labels} onCellClick={onCell} skin={skin} />
         </div>
       </div>
-      <div className="flex flex-col gap-2">
+      <div className={`flex flex-col gap-2 ${fill ? "min-h-0 overflow-auto pr-1" : ""}`}>
         <p className="text-[14px]">
           The engine has picked up the key next to the start. Four actions are legal. Which one would you take?
         </p>
