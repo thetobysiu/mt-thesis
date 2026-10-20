@@ -312,6 +312,7 @@ This step is why the search runs over decisions rather than moves: collecting a 
 
 The solver keeps a queue of states, ordered by the number of decisions made and then by HP.
 It repeatedly takes the first state, stops that line of search when the boss has been defeated or after 45 decisions, and otherwise adds one successor state for every adjacent monster or door.
+Every decision clears one monster or door node, and no single floor of this thesis has more than 32 such nodes, so the limit of 45 decisions never cuts a route short.
 A state in which the boss is defeated is a **win**; the set of monsters and doors cleared on the way is its **winning set**, and the optimum $\text{HP}_{\text{opt}}$ is the highest HP among all wins.
 
 The search stays small because of **dominance** (Section 2.7).
@@ -372,6 +373,7 @@ Because the queue orders states by the number of decisions before HP, a state wi
 On the complex floor, the published solver therefore reports an optimum of 22 HP.
 The exact solver, which also compares HP when a state is taken from the queue, finds 68 HP with ATK 16, DEF 20 and MDEF 20.
 The 21-decision route to 68 HP was executed action by action in the game engine; every action is legal and the boss is defeated with 68 HP remaining.
+The replay shows that the route is legal in the engine; that no route ends with more HP follows from the completeness of the search under the dominance test.
 On the simple floor and all fifteen generated floors, the exact solver and an independent Python reimplementation agree.
 All optima in this thesis come from the exact solver.
 

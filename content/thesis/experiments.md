@@ -386,7 +386,7 @@ It uses the two weaker models of Table 6.1, Llama-3.1-8B and DeepSeek-V4-Flash (
 Each model is run with three prompts.
 The *rules-only* prompt states only the game rules, the goal and the answer format.
 The *evolved* prompt is what the (1+1) loop of Section 5.7 produces from it, and the *hand-written* prompt is the single-floor prompt.
-Listing A.3 gives the rules-only prompt, and Listing A.4 the one evolved prompt confirmed in Section 6.5.2.
+Listing A.3 gives the rules-only prompt, and Listing A.4 the one evolved prompt that passed the paired test of Section 6.5.2.
 Each prompt is run under the full and under the bare observation.
 The loop uses the simple floor and two generated floors for training, six evaluations per run, and Qwen3.5-397B as the teacher, which is given no example prompt rules.
 The three prompts are then evaluated on thirteen held-out generated floors, one episode per floor.
@@ -480,7 +480,8 @@ The pre-registered confirmation covered all thirteen held-out floors with three 
 It passed its criterion of more kills and a one-sided sign test at $p < 0.05$ (Section 5.9.4).
 The rewrite won 30/39 [0.62, 0.87] episodes and the rules-only prompt 24/39 [0.46, 0.75], with discordant pairs 7 : 1 ($p = 0.035$) and mean goal score 0.724 against 0.613.
 The effect is carried by two floors, gen08 and gen12, on which the rules-only prompt stops fighting with the boss alive and HP to spare.
-On the nine floors not used in the trial, the discordant pairs are 3 : 1 ($p = 0.31$; Figure 6.3).
+The four trial floors, chosen because the rewrite had won them, contribute 4 : 0 of the discordant pairs, so the test is not independent of that choice.
+On the nine floors not used in the trial, the discordant pairs are 3 : 1 and the kills 18 against 16 ($p = 0.31$; Figure 6.3), which does not separate the two prompts.
 
 ![Paired confirmation per floor](/thesis/img/6.3.png)
 
@@ -493,7 +494,7 @@ The prediction held: no episode reached the boss during optimisation, and at $N 
 
 ### 6.5.3 Second Study: Population Versus Single Lineage
 
-The second study repeats the setting of the first study's only confirmed gain, the bare observation, with three changes.
+The second study repeats the setting of the first study's only gain that passed its paired test, the bare observation, with three changes.
 The task model reasons (DeepSeek-V4-Flash with thinking).
 The same model is the teacher and sees the options offered at every decision.
 Two loops with the same budget of eight candidates are compared: the (1+1) loop and the Pareto loop of Section 5.7 (Table 5.2).
@@ -634,7 +635,12 @@ Of the remaining decisions, the commit-3 and commit-5 runs take 29 and 31 from t
 The exact-route prompt (Listing A.6), a second compiled-knowledge condition, lists the 21 decisions of the exact optimal route with the expected HP after each; it is played reactively.
 Qwen3.6-35B wins 2/5 [0.12, 0.77] with it, both at 58 HP (0.85 of the optimum), the highest HP of any LLM kill on the complex floor.
 DeepSeek-V4-Flash wins 1/5 [0.04, 0.62], at 40 HP.
-Both winning episodes of Qwen3.6-35B follow all 21 listed decisions; one of its three failures ends with the hero dead, because this condition, like the solver-route prompt, runs without the mechanical overrides (Section 5.4).
+Both winning episodes of Qwen3.6-35B take the 21 listed decisions in order; one of its three failures ends with the hero dead, because this condition, like the solver-route prompt, runs without the mechanical overrides (Section 5.4).
+The two wins also take two unlisted fights that cost 0 HP, against the Red Slimes (9,3) and (11,0).
+The solver takes such fights automatically, so they are not decisions of the route and are not listed, while this condition runs without the engine's automatic 0-HP fights.
+Before each of the first 18 listed decisions, the hero's attributes equal those on the solver's route at the same point.
+Both episodes then leave the Red Slime (11,0), which guards a gem of +5 MDEF, until after the 20th decision; the reasoning of one of them cites the prompt's rule against fights that are not in the route.
+The Bat (11,4) and the Big Bat (12,12) are therefore fought with MDEF 15 instead of 20 and cost 5 HP more each, which accounts for the 10 HP between 58 HP and the optimum.
 Every failure leaves the listed route by the model's own choice.
 Three of five DeepSeek-V4-Flash episodes leave it at the same decision, taking a fight shown at 43 HP instead of the listed one shown at 185.
 

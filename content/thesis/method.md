@@ -109,6 +109,11 @@ Table 5.1 summarises them.
 | Key budget | state block | keys held and on the floor versus closed doors, per colour |
 | Boss line and HP budget | state block | whether the boss is winnable now, the ATK it needs, and the HP needed at maximum stats for the monsters that block the way |
 
+The annotations differ in kind.
+Damage, HP after, the status tags, the cost at maximum stats, the lookahead tree, the key lines and the key budget follow exactly from the rules in the current state.
+The net stat-route line, the fight-order line and the HP budget compare exact costs along routes that the engine specifies; the fight-order line also names an action to take first and is therefore advice.
+The lookahead value and the effective cost rest on hand-set weights (Section 5.2.2) and are heuristic estimates.
+
 ### 5.2.1 Exact Costs and Status Tags
 
 *Purpose:* to remove every arithmetic step from the model's task.
@@ -247,6 +252,7 @@ The solver-route prompt and the exact-route prompt of Section 6.6 were run witho
 The solver-route prompt was developed while the engine's overrides still included the strategic overrides of Section 5.6, which replaced steps of its listed route; its rule never to take a lethal fight took the place of the engine's lethal-fight override, and the exact-route prompt was run in the same configuration so that the two route conditions are comparable.
 Items and keys were still collected automatically, and an episode still ended as stuck when only lethal or unwinnable fights remained.
 A lethal fight chosen while another action existed was therefore executed; this is how the deaths in these conditions arise (Chapter 6).
+Results with the route prompts therefore differ from those with the single-floor prompt in the execution settings as well as in the prompt.
 
 ## 5.5 Decision Loop and Planning Modes
 

@@ -429,7 +429,7 @@ export function TourContent({ slug }: { slug: string }) {
           </Say>
           <div className="kpis">
             <div className="kpi"><span className="v">within noise</span><span className="k">evolved prompts against the hand-written and rules-only prompts when the annotations are present</span><Link className="link" href={tableHref("Table 6.6")}>Table 6.6</Link></div>
-            <div className="kpi"><span className="v">one gain</span><span className="k">confirmed without annotations; it restates an annotation as a procedure</span></div>
+            <div className="kpi"><span className="v">one gain</span><span className="k">without annotations; it restates an annotation as a procedure, and its paired test included the floors it was selected on</span></div>
             <div className="kpi"><span className="v">26 · 24 / 32</span><span className="k">held-out wins of 39: (1+1) loop and Pareto loop against the rules-only prompt, with a reasoning model</span></div>
           </div>
           <Say>

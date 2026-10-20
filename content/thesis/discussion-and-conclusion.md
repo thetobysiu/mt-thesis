@@ -28,9 +28,10 @@ The error analysis shows what "legible" means.
 At the decisions whose reasoning was read, the model cited an annotation that stated one side of a trade-off and omitted the other (Section 6.4.2).
 Five kinds of this defect were identified, on the simple floor and the complex floor.
 They are a saving without the cost of reaching it, a value without its cost (potions counted as fight value), an efficiency without its affordability, a deficit without its scope, and a count without its multiplicity.
-In each of these cases, the model argued faithfully from the number it was given.
-This is a more tractable failure than unfaithful reasoning (Turpin et al., 2023; Lanham et al., 2023).
-The chain of thought followed validly from its input, the input was wrong, and the input can be repaired.
+In each of these cases, the written reasoning cited the number it was given and argued from it.
+The text alone does not show that it reflects how the answer was produced (Turpin et al., 2023; Lanham et al., 2023).
+The stronger evidence is the intervention: with model and prompt fixed, repairing the annotation changed the choice (Table 6.5).
+A defect of this kind lies in the input and can be repaired there.
 This suggests a design rule for engines that annotate an agent's observation.
 A quantity should enter the observation only together with the quantity it trades against.
 Each new annotation should then be tested at a state where the two disagree.
@@ -83,7 +84,7 @@ When the order is supplied, three of the four models win with it.
 With the solver-route prompt, DeepSeek-V4-Flash wins 4/5, Qwen3.5-397B 3/5 and Qwen3.6-35B 4/10 in the re-run of Table 6.2, while Mistral Medium 3.5 wins none and dies in four of five episodes; this condition runs without the mechanical overrides (Section 5.4).
 In the reactive arm of the planning study, DeepSeek-V4-Flash won the same condition 8/10 (Table 6.9).
 Every win of the re-run ends at 22 HP or below, a third of the optimum, because the prompt's door order caps the result.
-With the exact optimal route in the prompt, Qwen3.6-35B reaches 58 of 68 HP in 2 of 5 episodes (Section 6.6).
+With the exact optimal route in the prompt, Qwen3.6-35B reaches 58 of 68 HP in 2 of 5 episodes; the missing 10 HP come from one unlisted 0-HP fight taken late (Section 6.6).
 Where the models leave a given route, they leave it towards the fight that is cheaper now.
 Ten of the 14 failures with the solver-route prompt are lost at the same Red Slime, taken out of the prompt's order (Section 6.4.5).
 Three of five DeepSeek-V4-Flash episodes with the exact route take a fight shown at 43 HP instead of the listed one shown at 185 (Section 6.6).
@@ -122,7 +123,8 @@ Each rediscovered principle corresponds to an annotation that the engine already
 With the full observation, the rules-only, evolved and hand-written prompts are within the variation between repeated evaluations of one another.
 For Llama-3.1-8B, a byte-identical copy of the rules-only prompt scored 10 held-out kills where the original scored 8, which sets the noise floor of the comparison (Table 6.6).
 Without the annotations, neither the evolved nor the hand-written prompt restores what was lost.
-The one confirmed gain was found for DeepSeek-V4-Flash (no thinking) under the bare observation (30 against 24 kills, one-sided sign test, $p = 0.035$).
+The one gain that passed a paired test was found for DeepSeek-V4-Flash (no thinking) under the bare observation (30 against 24 kills, one-sided sign test, $p = 0.035$).
+That test included the trial floors on which the rewrite had been selected; on the nine other floors, it does not separate the two prompts ($p = 0.31$).
 It came from a rewrite that describes in prose the computation behind the engine's OPTIONAL tag.
 This suggests that, where the observation lacks a fact, the optimiser can partly supply it as a procedure.
 
@@ -219,8 +221,10 @@ R1 is therefore rejected for the headline effects; it cannot be excluded for dif
 This explanation holds for every gain measured on training floors.
 The one training gain under the full observation did not survive paired re-evaluation, and the training gains of the second study reversed on the held-out floors (Section 6.5).
 In the first study, the noise floor was measured directly, and the one gain that exceeded it passed a pre-registered paired test (Section 7.1.5).
-That gain is narrow: it rests largely on two floors that share one failure, and on the nine floors not used to select the rewrite the discordant pairs split 3 : 1 ($p = 0.31$).
-R2 is therefore excluded for the confirmed gain over the thirteen floors of the confirmation; on the floors not used to select the rewrite, the evidence does not separate that gain from luck.
+That gain is narrow: it rests largely on two floors that share one failure.
+The test is also not independent of the selection, because it includes the twelve trial episodes on the four floors chosen for the rewrite's wins, which contribute 4 : 0 of the discordant pairs.
+On the nine floors not used to select the rewrite, the discordant pairs split 3 : 1 ($p = 0.31$).
+R2 therefore cannot be excluded for this gain either; it is a result on a selected sample, not an independent confirmation.
 
 **R3: The engine's overrides, not the model, produce the wins.**
 For the early simple-floor results, this explanation is correct (Section 7.1.2).
@@ -297,10 +301,14 @@ Fourth, the layouts of the four hand-designed floors were drafted by a language 
 They were built to have a unique winning set and to defeat the heuristic, not to be representative of the game.
 The heuristic's failure on them is therefore a design property, not evidence for the agent.
 
-Fifth, all models were accessed through one inference service, with its own serving stack and availability, and the served models changed during the study (Section 7.2).
+Fifth, the only reference agents are the rule-based heuristic and random play.
+No stronger deterministic controller that uses the same annotations, such as a bounded search over the listed actions, was run.
+The results therefore show an advantage of the hybrid agent over the implemented heuristic on the floors tested, not that a language model is needed to choose among the engine's annotations.
+
+Sixth, all models were accessed through one inference service, with its own serving stack and availability, and the served models changed during the study (Section 7.2).
 Results of a hosted model are a property of the model version served at the time, and exact reproduction depends on continued access to the same versions.
 
-Sixth, decoding used temperature 0 throughout, so that all cells share one condition and a failure can be traced along a single trajectory.
+Seventh, decoding used temperature 0 throughout, so that all cells share one condition and a failure can be traced along a single trajectory.
 This is below the values that the model cards recommend for thinking mode (0.6 for Qwen3.5-397B, 1.0 for DeepSeek-V4-Flash).
 The DeepSeek-R1 report found that greedy decoding of long reasoning outputs raises repetition rates (Guo et al., 2025), and the truncated answers that had to be repaired (Section 5.3) are consistent with that.
 The repetitions at 0.6 and 1.0 changed no conclusion (Section 7.2).
@@ -339,7 +347,7 @@ For DeepSeek-V4-Flash and Mistral Medium 3.5, the evidence on the simple floor d
 
 With respect to the second research question, reflective prompt optimisation rediscovers, from a rules-only prompt, the strategy principles that follow from the combat formula and the floor structure, but rarely the HP limit and key scarcity.
 On an agent whose observation already carries these principles, the evolved prompts are within the variation between repeated evaluations of the hand-written and rules-only prompts.
-The one confirmed gain arises without annotations and restates an annotation as a procedure.
+The one gain that passed a paired test arises without annotations, restates an annotation as a procedure, and is not independent of the selection of its trial floors.
 With a reasoning model, both the (1+1) loop and the Pareto loop overfit their training floors and win fewer held-out episodes than the rules-only prompt, significantly so for the Pareto loop (two-sided sign test, $p = 0.008$).
 Without the validator, evolution did not learn the complex floor's route.
 Across the experiments, the observation constrained success more than the prompt did.
@@ -369,6 +377,7 @@ Keep the division of labour and move the order into the engine.
 A bounded search from the current state proposes a small set of candidate orders of fights and doors with their exact HP cost.
 The model chooses among them as it now chooses among actions.
 The question is whether the model can choose well among legible plans, which it did not produce in this study.
+Run on its own, the same search is also the deterministic comparator that this study lacks (Section 7.4).
 
 **Planning that can consult the engine.**
 The committed plans of this study are consistent with failure by timing: each step was chosen before the engine had computed the facts of the states it leads to.
@@ -378,7 +387,7 @@ A planner that proposes a step, receives that state's annotated action list from
 Run the Pareto loop and the (1+1) loop at the same budget with three to five episodes per candidate and floor (Chang and Chen, 2026).
 Use several decision positions per floor as training instances instead of whole episodes (Section 7.1.5).
 The present study indicates that without repetition, the acceptance step cannot see gains of the size the rewrites produce.
-Optimise where the observation is known to be incomplete: under the bare observation, where the study found its only confirmed gain (Section 6.5.2), and on hand03 and hand04, where the full observation does not suffice.
+Optimise where the observation is known to be incomplete: under the bare observation, where the study found its only gain that passed a paired test (Section 6.5.2), and on hand03 and hand04, where the full observation does not suffice.
 Give the teacher the solver's state values for each failed episode, which the traces lack (Section 6.5.4).
 
 **The observation itself as the object of optimisation.**

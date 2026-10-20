@@ -83,7 +83,7 @@ The protocol, the exact solver and a web platform that runs and replays every ex
 
 Third, it reports negative and boundary results.
 The hypotheses of the prompt-optimisation study, its paired confirmation and the predictions for the optimiser runs on the complex floor were stated in advance.
-Prompt optimisation stays within the measured noise floor when the annotations are present and yields one narrow confirmed gain when they are withheld.
+Prompt optimisation stays within the measured noise floor when the annotations are present and yields one narrow gain when they are withheld, which passed a paired test that included the floors on which it had been selected.
 With a reasoning model, a single-lineage and a population-based optimisation loop both win fewer held-out episodes than the rules-only prompt (26 and 24 against 32 of 39).
 Floors whose decisive choice is an order of several doors and fights are not won from a general prompt.
 With the published solver's route in the prompt, three of four models win 4 of 5, 3 of 5 and 4 of 10 episodes on the complex floor.

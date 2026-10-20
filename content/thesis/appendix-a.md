@@ -1,6 +1,6 @@
 # Appendix A: Prompts and Observation
 
-This appendix reproduces the system prompts of the main results of Chapter 6, the rules-only prompt and the confirmed evolved prompt of the prompt optimisation study, the compiled-knowledge prompts for the complex floor, the complete observation of Listing 5.1, the planning instruction, and the reflection template and validator of the prompt optimiser.
+This appendix reproduces the system prompts of the main results of Chapter 6, the rules-only prompt and the evolved prompt of the paired test of the prompt optimisation study, the compiled-knowledge prompts for the complex floor, the complete observation of Listing 5.1, the planning instruction, and the reflection template and validator of the prompt optimiser.
 The other evolved prompts (Tables 6.6 and 6.8, Sections 6.5.2 and 6.5.4) are stored with their runs (Appendix D).
 All texts are verbatim.
 The character counts are those of the text sent to the model.
@@ -107,12 +107,12 @@ GOAL: kill the boss and stay alive.
 End your answer with: FINAL_CHOICE: <number>
 ```
 
-## A.4 The Evolved Prompt of the Confirmed Gain
+## A.4 The Evolved Prompt of the Paired Test
 
 Listing A.4 is the one evolved prompt that changed behaviour in the prompt optimisation study (Section 6.5.2; 3,152 characters).
 In the second configuration of the optimiser, the teacher wrote it for DeepSeek-V4-Flash (no thinking) under the bare observation, and it was accepted at the first iteration.
 
-**Listing A.4:** The evolved prompt confirmed by the paired test of Section 6.5.2.
+**Listing A.4:** The evolved prompt of the paired test of Section 6.5.2.
 
 ```text
 You play Magic Tower, a turn-based dungeon game on a single floor. Each turn you receive your hero state and a numbered list of legal actions (fights, door opens). You answer with one action number.
@@ -165,6 +165,7 @@ The Bat (11,4) and the Big Bat (0,6) are not dead ends; the exact optimum fights
 The prompt states that the cost of a Slime Lord never decreases; it falls as ATK and MDEF rise, and the exact optimum fights the Slime Lord (3,10).
 The prompt is reproduced as it was used.
 The second, the exact-route prompt of Listing A.6, lists the 21 decisions of the exact optimal route with the expected HP after each (2,101 characters).
+It does not list the two fights at 0 HP that the solver takes automatically, against the Red Slimes (9,3) and (11,0), because they are not decisions of the route (Section 6.6).
 Its results are reported under "Executing the exact optimum" in Section 6.6.
 
 **Listing A.5:** The solver-route prompt (with the survival rule).

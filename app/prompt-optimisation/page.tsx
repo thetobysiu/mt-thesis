@@ -95,7 +95,7 @@ export default function PromptOptimisationPage() {
         </div>
         <div className="kpis">
           <div className="kpi"><span className="v">≤ 0.132</span><span className="k">difference between two held-out evaluations of the same prompt; differences between candidates inside a run were 0.01 to 0.24</span></div>
-          {conf && <div className="kpi"><span className="v">{conf.gepa.success}/{conf.gepa.n} vs {conf.core.success}/{conf.core.n}</span><span className="k">paired confirmation of the one accepted rewrite (bare observation, DeepSeek-V4-Flash) against the rules-only prompt; p = 0.035, carried by two floors</span><Link className="link" href="/prompt-optimisation/gs2_dsv4flash_bare/">the rewrite</Link></div>}
+          {conf && <div className="kpi"><span className="v">{conf.gepa.success}/{conf.gepa.n} vs {conf.core.success}/{conf.core.n}</span><span className="k">paired test of the one accepted rewrite (bare observation, DeepSeek-V4-Flash) against the rules-only prompt; p = 0.035, carried by two floors and including the four trial floors it was selected on; on the nine other floors 3 : 1, p = 0.31</span><Link className="link" href="/prompt-optimisation/gs2_dsv4flash_bare/">the rewrite</Link></div>}
         </div>
       </section>
 

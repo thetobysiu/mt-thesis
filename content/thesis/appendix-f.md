@@ -19,7 +19,7 @@ The other evolved prompts are stored in the repository and in the result files o
 | Tower prompt | 6,035 | As above, with scouting, shop rules and cross-floor reading | Chapter 6, final tower observation (Listing A.2) |
 | Tower prompts of the first and second tower observation | 3,629 and 3,725 | Earlier versions of the tower prompt (Appendix A.2); the second is stored in each run log | Tables 6.9 and 6.13 |
 | Rules-only prompt | 826 | Game rules, goal and answer format only | Prompt optimisation study, seed and reference (Listing A.3) |
-| Evolved prompt, confirmed | 3,152 | Rewrite by the optimiser for DeepSeek-V4-Flash (no thinking), bare observation | Section 6.5.2 (Listing A.4) |
+| Evolved prompt, paired test | 3,152 | Rewrite by the optimiser for DeepSeek-V4-Flash (no thinking), bare observation | Section 6.5.2 (Listing A.4) |
 | Other evolved prompts of the first study | 826 to 2,423 | Best prompt of each other run; five runs returned the seed unchanged | Table 6.6 |
 | Evolved complex-floor prompt | 3,238 | Best prompt of the run that started from the single-floor prompt on the complex floor (Qwen3.6-35B) | Section 6.5.2 |
 | Best prompts of the second study | 3,292 ((1+1) loop), 2,958 (Pareto loop) | Best of eight candidates each, DeepSeek-V4-Flash with thinking, bare observation | Table 6.8 |

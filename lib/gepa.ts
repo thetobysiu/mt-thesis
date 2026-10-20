@@ -24,7 +24,7 @@ export const GEPA_RUNS: GepaRunMeta[] = [
   { label: "gs2_dsv4flash_full", study: "Study 1, second configuration", title: "DeepSeek-V4-Flash, full observation", section: "6.5.2", studyFile: "gs2_dsv4flash_full", arms: ARMS1,
     note: "Richer traces and DeepSeek-V4-Flash as teacher; the optimiser kept the seed." },
   { label: "gs2_dsv4flash_bare", study: "Study 1, second configuration", title: "DeepSeek-V4-Flash, bare observation", section: "6.5.2", studyFile: "gs2_dsv4flash_bare", arms: ARMS1,
-    note: "The one accepted rewrite of the second configuration, taken to the paired confirmation: 30/39 against 24/39 for the rules-only prompt (p = 0.035)." },
+    note: "The one accepted rewrite of the second configuration, taken to the paired test: 30/39 against 24/39 for the rules-only prompt (p = 0.035). The test includes the four trial floors on which it was selected (4 : 0); on the nine other floors 3 : 1, p = 0.31." },
   { label: "gs5_oneplusone_dsthink_bare", study: "Study 2", title: "(1+1) loop, DeepSeek-V4-Flash with thinking, bare observation", section: "6.5.3", studyFile: "gs5_oneplusone_dsthink_bare", arms: { core: "Rules-only", gepa: "Best of the (1+1) loop" },
     note: "The training score rose, the held-out result fell: overfitting in the sense of hypothesis G4." },
   { label: "gs5_pareto_dsthink_bare", study: "Study 2", title: "Pareto loop, DeepSeek-V4-Flash with thinking, bare observation", section: "6.5.3", studyFile: "gs5_pareto_dsthink_bare", arms: { core: "Rules-only", gepa: "Best of the Pareto loop" },

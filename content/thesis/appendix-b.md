@@ -33,9 +33,10 @@ Ensure:  damage D, HP after, whether the fight can be won
 17: return D, hero HP - D, (hero HP - D > 0)
 ```
 
-The engine treats a fight with $D \ge$ HP as lethal and never executes it.
-If the model chooses it while a non-lethal action exists, the choice is replaced by the action of the rule-based heuristic.
+The engine treats a fight with $D \ge$ HP as lethal.
+If the model chooses it while a non-lethal action exists, the mechanical override replaces the choice by the action of the rule-based heuristic.
 If only lethal or unwinnable fights remain, the episode ends as stuck (Section 5.6).
+The two route-prompt conditions run without the mechanical overrides, so a lethal fight chosen there while another action exists is executed (Section 5.4).
 On the floors of this thesis, only magic attack, first strike, double and triple attack, the four-strike attack, break armour, fixed damage and vampire occur (Table 4.1).
 
 ## B.2 The Exact Solver

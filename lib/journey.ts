@@ -124,7 +124,7 @@ export const JOURNEY: Phase[] = [
     items: [
       {
         date: "28 September", title: "A pre-registered prompt-optimisation study", kind: "finding",
-        body: "Hypotheses stated in advance; evolved, hand-written and rules-only prompts paired on thirteen held-out floors, with the noise floor measured directly. With the annotations, the evolved prompts stayed within it. Without them, the evolved prompts did not make up for the missing annotations; a later paired confirmation found one narrow gain.",
+        body: "Hypotheses stated in advance; evolved, hand-written and rules-only prompts paired on thirteen held-out floors, with the noise floor measured directly. With the annotations, the evolved prompts stayed within it. Without them, the evolved prompts did not make up for the missing annotations; a later paired test found one narrow gain, which rests on the floors the rewrite was selected on.",
         links: [{ href: "/tour/prompt-optimisation/", label: "tour: prompt optimisation" }],
       },
       {
