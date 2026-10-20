@@ -169,6 +169,14 @@
     <script id='mainScript' src='main.js'></script>
     <script src='en.js'></script>
     <script>main.init('play', function () { window.mtEnglish(); }); main.listen();</script>
+    <script>
+        // inside the thesis page's iframe, scroll keys and the wheel would otherwise scroll the page behind the game
+        window.addEventListener('keydown', function (e) {
+            if (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+            if ([32, 33, 34, 35, 36, 37, 38, 39, 40].indexOf(e.keyCode) >= 0) e.preventDefault();
+        }, true);
+        window.addEventListener('wheel', function (e) { e.preventDefault(); }, { passive: false });
+    </script>
 </body>
 
 </html>

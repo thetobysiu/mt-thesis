@@ -70,7 +70,7 @@ export default function FloorsPage() {
 
       <FloorGroup id="tower" title="Tower floors" summary={`${tower.floors.length} maps · MT0 to MT23 · Table 6.13`}
                   text={<>The 24-floor tower as the game starts each floor (MT23 has three wings), with how many of the {tower.runs.length} tower runs
-                    cited by the thesis reached it. The whole tower is playable in the <Link className="link" href="/tower/">Tower Game</Link>.</>}>
+                    cited by the thesis reached it. The whole tower is playable in the <Link className="link" href="/game/">Tower Game</Link>.</>}>
         <div className="card-grid">
           {tower.floors.map((f) => {
             const n = reached(f.id);

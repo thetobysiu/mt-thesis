@@ -269,7 +269,9 @@ section[id] { scroll-margin-top: calc(var(--header) + 12px); }
 .viewer .stat .v { font-size: 19px; white-space: nowrap; }
 @media (max-width: 1000px) {
   .viewer { grid-template-columns: minmax(0, 1fr); height: auto; }
-  .viewer .map-area { height: 70vh; }
+  .viewer .map-area { height: auto; }
+  .viewer .map-area > .widget, .viewer .map-area > .widget > .body { flex: none; }
+  .viewer .map-box { flex: none; height: clamp(300px, 60vh, 560px); }
   .viewer .turn-panel { max-height: 85vh; }
 }
 .step-list { display: flex; flex-direction: column; }

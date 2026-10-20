@@ -55,7 +55,7 @@ export default function TowerPage() {
           floor and scripted events; the normal ending is the defeat of the Nether Demon King on MT21. Below the game: how far the agents climbed.
         </p>
         <div className="flex flex-wrap gap-2">
-          <a className="btn btn-primary" href="/game/24/play/" target="_blank" rel="noopener">Open full screen</a>
+          <a className="btn btn-primary" href="/game/24/play/index.html" target="_blank" rel="noopener">Open full screen</a>
           <a className="btn" href="#runs">How far the agents got</a>
           <Link className="btn" href="/play/">Play a single floor</Link>
         </div>
@@ -64,11 +64,11 @@ export default function TowerPage() {
       <section id="play" className="flex flex-col gap-3 scroll-mt-20" aria-label="the game">
         <div className="grid gap-[var(--gap)] xl:grid-cols-[minmax(0,1fr)_22rem]">
           <div className="panel p-2">
-            <iframe src="/game/24/play/" title="24-floor Magic Tower (original game, English)" className="w-full rounded border-0 bg-black" style={{ aspectRatio: "4 / 3", minHeight: 420 }}
+            <iframe src="/game/24/play/index.html" title="24-floor Magic Tower (original game, English)" className="w-full rounded border-0 bg-black" style={{ aspectRatio: "4 / 3", minHeight: 420 }}
                     allow="autoplay; fullscreen" />
             <p className="text-[12px] muted mt-1">
-              Click into the game before using the keyboard. <a className="link" href="/game/24/play/" target="_blank" rel="noopener">Open full screen</a>
-              {" · "}<a className="link" href="/game/24/" target="_blank" rel="noopener">the untouched original</a> (Chinese, with its title screen and mode choice).
+              Click into the game before using the keyboard. <a className="link" href="/game/24/play/index.html" target="_blank" rel="noopener">Open full screen</a>
+              {" · "}<a className="link" href="/game/24/index.html" target="_blank" rel="noopener">the untouched original</a> (Chinese, with its title screen and mode choice).
             </p>
           </div>
           <div className="panel p-3 flex flex-col gap-2 text-[13px]">

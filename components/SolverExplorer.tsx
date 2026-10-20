@@ -11,7 +11,7 @@ import type { FloorSolution, RouteStepData } from "@/lib/data-types";
 import { parseFloor, type FloorDef } from "@/lib/engine/floor";
 import { floorMapData } from "@/lib/engine/mapdata";
 import { itemTable } from "@/lib/engine/state";
-import { Graph, Search, type SearchEvent, type SNode, type SolverState } from "@/lib/solver/solver";
+import { Graph, Search, javaDamage, type SearchEvent, type SNode, type SolverState } from "@/lib/solver/solver";
 
 const MIN_CELL = 28, MAX_CELL = 56;
 const DOOR_FILL: Record<number, string> = { 81: "#EAB308", 82: "#3B82F6", 83: "#EF4444" };
@@ -83,7 +83,8 @@ function viewOf(g: Graph, s: SolverState | null): View {
   return { visited, order, frontier, hero: { x: s.current.y, y: s.current.x } };
 }
 
-type ReplayStep = { decision: boolean; nodes: SNode[]; at: { x: number; y: number }; hp: number; atk: number; def: number; keys: number[] };
+type ReplayStep = { decision: boolean; nodes: SNode[]; at: { x: number; y: number }; hp: number; atk: number; def: number; mdef?: number; keys: number[] };
+type GraphHero = Parameters<typeof javaDamage>[0];
 
 /** One view per decision of a finished route: view k is after decision k and the pickups that follow it (0 = the start). */
 function replayOf(g: Graph, steps: ReplayStep[]) {
@@ -110,6 +111,24 @@ function replayOf(g: Graph, steps: ReplayStep[]) {
   }
   if (prev) { frames.push(snap()); heroes.push(prev); }
   return { frames, route, heroes };
+}
+
+type HeroNow = { hp: number; atk: number; def: number; mdef?: number; keys: number[] };
+
+/** The hero as the damage formula needs it; stored results carry no MDEF, so the start value stands in. */
+const damageHero = (start: GraphHero, now: HeroNow): GraphHero => ({ ...start, hp: now.hp, atk: now.atk, def: now.def, mdef: now.mdef ?? start.mdef });
+
+/** The hero's stats at the step shown, as in the episode viewer; the HP change is against the step before. */
+function HeroStats({ hero, prevHp, startHp }: { hero: HeroNow; prevHp?: number; startHp: number }) {
+  const d = prevHp != null ? hero.hp - prevHp : 0;
+  return (
+    <div className="grid grid-cols-3 gap-[var(--gap)]">
+      <Stat label="HP" value={hero.hp} sub={`${d ? `${d > 0 ? "+" : ""}${d} this step · ` : ""}start ${startHp}`}
+            tone={hero.hp <= 0 ? "bad" : hero.hp < startHp * 0.2 ? "warn" : undefined} />
+      <Stat label="ATK / DEF" value={`${hero.atk} / ${hero.def}`} />
+      <Stat label="Keys" value={hero.keys.join(" / ")} sub="yellow / blue / red" />
+    </div>
+  );
 }
 
 const replaySummary = (at: number, h: ReplayStep | undefined) =>
@@ -142,15 +161,19 @@ function useReplay(last: number) {
 
 function ReplayControls({ r, last }: { r: ReturnType<typeof useReplay>; last: number }) {
   return (
-    <div className="flex flex-wrap items-center gap-1">
-      <button className="btn btn-sm" onClick={() => r.stepTo(0)} aria-label="start"><IconSkipStart /></button>
-      <button className="btn btn-sm" onClick={() => r.stepTo(r.at - 1)} aria-label="previous decision"><IconPrev /></button>
-      <button className="btn btn-sm btn-primary" onClick={r.togglePlay} aria-label={r.running ? "pause" : "play"}>{r.running ? <IconPause /> : <IconPlay />}</button>
-      <button className="btn btn-sm" onClick={() => r.stepTo(r.at + 1)} aria-label="next decision"><IconNext /></button>
-      <button className="btn btn-sm" onClick={() => r.stepTo(last)} aria-label="end"><IconSkipEnd /></button>
+    <div className="flex flex-col gap-2">
       <input type="range" min={0} max={last} value={r.at} onChange={(e) => r.stepTo(Number(e.target.value))}
-             className="flex-1 min-w-[140px] max-w-[420px] mx-2" aria-label="decision" />
-      <span className="mono text-[12px] muted">decision {r.at} / {last}</span>
+             className="w-full" aria-label="decision" />
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+        <div className="flex items-center gap-1" role="group" aria-label="decision controls">
+          <button className="btn btn-sm" onClick={() => r.stepTo(0)} aria-label="start"><IconSkipStart /></button>
+          <button className="btn btn-sm" onClick={() => r.stepTo(r.at - 1)} aria-label="previous decision"><IconPrev /></button>
+          <button className="btn btn-sm btn-primary" onClick={r.togglePlay} aria-label={r.running ? "pause" : "play"}>{r.running ? <IconPause /> : <IconPlay />}</button>
+          <button className="btn btn-sm" onClick={() => r.stepTo(r.at + 1)} aria-label="next decision"><IconNext /></button>
+          <button className="btn btn-sm" onClick={() => r.stepTo(last)} aria-label="end"><IconSkipEnd /></button>
+        </div>
+        <span className="mono text-[12px] muted">decision {r.at} / {last}</span>
+      </div>
     </div>
   );
 }
@@ -216,13 +239,18 @@ function SolverRun({ floor, mode, skin }: { floor: SolverFloor; mode: Mode; skin
   const finished = snap.done && best != null;
   const replay = useMemo(() => finished ? replayOf(g, best.route.map((r) => ({
     decision: r.kind === "decision", nodes: g.list.filter((m) => m.id === r.nodeId), at: r.tiles[0],
-    hp: r.hero.hp, atk: r.hero.atk, def: r.hero.def, keys: [r.hero.yellow, r.hero.blue, r.hero.red],
+    hp: r.hero.hp, atk: r.hero.atk, def: r.hero.def, mdef: r.hero.mdef, keys: [r.hero.yellow, r.hero.blue, r.hero.red],
   }))) : null, [g, finished, best]);
   const rp = useReplay(replay?.route.length ?? 0);
   const shown = finished ? best : snap.current;
   const view = useMemo(() => replay ? replay.frames[rp.at] : viewOf(g, snap.current), [g, replay, rp.at, snap.current]);
   const route: RouteRow[] = replay ? replay.route : shown ? shown.route.filter((r) => r.kind === "decision")
     .map((r) => ({ nodes: g.list.filter((m) => m.id === r.nodeId), hp: r.hero.hp })) : [];
+  const startHero = g.list[0].hero!;
+  const heroOf = (h: GraphHero): HeroNow => ({ hp: h.hp, atk: h.atk, def: h.def, mdef: h.mdef, keys: [h.yellow, h.blue, h.red] });
+  const nowHero = replay ? replay.heroes[rp.at] ?? heroOf(startHero) : heroOf(shown?.current.hero ?? startHero);
+  const prevHp = replay ? replay.heroes[rp.at - 1]?.hp
+    : shown ? shown.route[shown.route.findLastIndex((r) => r.kind === "decision") - 1]?.hero.hp : undefined;
 
   return (
     <>
@@ -235,8 +263,9 @@ function SolverRun({ floor, mode, skin }: { floor: SolverFloor; mode: Mode; skin
       </div>
       {replay && <ReplayControls r={rp} last={replay.route.length} />}
       <div className="grid gap-[var(--gap)] xl:grid-cols-[minmax(0,1fr)_420px]">
-        <SearchGraph g={g} def={def} view={view} name={name} skin={skin} />
+        <SearchGraph g={g} def={def} view={view} name={name} skin={skin} hero={damageHero(startHero, nowHero)} />
         <div className="flex flex-col gap-[var(--gap)] min-w-0">
+          <HeroStats hero={nowHero} prevHp={prevHp} startHp={startHero.hp} />
           <div className="grid grid-cols-2 gap-[var(--gap)]">
             <Stat label="Expanded" value={snap.index.toLocaleString("en")} sub={`${snap.polls} taken from the queue`} />
             <Stat label="Queue" value={snap.queue} sub={`${snap.push} queued in total`} />
@@ -285,6 +314,7 @@ function StoredRun({ floor, solution, mode, skin }: { floor: SolverFloor; soluti
   const { at } = rp;
   const view = frames[at];
   const hero = heroes[at];
+  const start = heroes[0];
 
   return (
     <>
@@ -294,8 +324,9 @@ function StoredRun({ floor, solution, mode, skin }: { floor: SolverFloor; soluti
       </div>
       <ReplayControls r={rp} last={last} />
       <div className="grid gap-[var(--gap)] xl:grid-cols-[minmax(0,1fr)_420px]">
-        <SearchGraph g={g} def={def} view={view} name={name} skin={skin} />
+        <SearchGraph g={g} def={def} view={view} name={name} skin={skin} hero={damageHero(g.list[0].hero!, hero ?? start)} />
         <div className="flex flex-col gap-[var(--gap)] min-w-0">
+          {hero && <HeroStats hero={hero} prevHp={heroes[at - 1]?.hp} startHp={start.hp} />}
           <div className="grid grid-cols-2 gap-[var(--gap)]">
             <Stat label="States" value={sol.states.toLocaleString("en")} sub={`expanded by the ${mode} search`} />
             <Stat label="Winning sets" value={sol.winningSets.toLocaleString("en")} sub="sets of cleared nodes that defeat the boss" />
@@ -338,7 +369,7 @@ function RouteList({ title, summary, route, name, at, onPick }: { title: string;
   );
 }
 
-function SearchGraph({ g, def, view, name, skin }: { g: Graph; def: FloorDef; view: View; name: (n: SNode) => string; skin: MapSkin }) {
+function SearchGraph({ g, def, view, name, skin, hero }: { g: Graph; def: FloorDef; view: View; name: (n: SNode) => string; skin: MapSkin; hero: GraphHero }) {
   const tiles = skin === "game";
   const wrap = useRef<HTMLDivElement>(null);
   const [CELL, setCell] = useState(40);
@@ -390,15 +421,14 @@ function SearchGraph({ g, def, view, name, skin }: { g: Graph; def: FloorDef; vi
             const here = view.hero != null && view.hero.x === (n.parts[0] ?? n).y && view.hero.y === (n.parts[0] ?? n).x;
             const label = !tiles && here ? "@" : step != null ? String(step) : "";
             const tip = `node ${n.id}: ${name(n)}${step != null ? ` · decision ${step}` : ""}${visited ? " (cleared in this state)" : next ? " (can be taken next)" : ""}`;
+            const tiles_ = n.parts.length ? n.parts : [n];
             return (
               <g key={n.id}>
                 {!tiles && n.parts.slice(1).map((p, i) => <circle key={i} cx={(p.y + 0.5) * CELL} cy={(p.x + 0.5) * CELL} r={4} fill={fill(n)} opacity={visited ? 0.9 : 0.4} />)}
                 {tiles ? (
                   <>
                     <rect x={a.cx - CELL / 2 + 1.5} y={a.cy - CELL / 2 + 1.5} width={CELL - 3} height={CELL - 3} rx={6} fill={visited ? fill(n) : "none"} fillOpacity={0.18}
-                          stroke={next ? "#FBBF24" : fill(n)} strokeWidth={next ? 3 : visited ? 2.5 : 1.5} strokeOpacity={visited || next ? 1 : 0.6}>
-                      <title>{tip}</title>
-                    </rect>
+                          stroke={next ? "#FBBF24" : fill(n)} strokeWidth={next ? 3 : visited ? 2.5 : 1.5} strokeOpacity={visited || next ? 1 : 0.6} />
                     {label && <>
                       <circle cx={a.cx - CELL / 2 + 8} cy={a.cy - CELL / 2 + 8} r={8} fill="#FBBF24" stroke="#0B1220" strokeWidth={1} pointerEvents="none" />
                       <text x={a.cx - CELL / 2 + 8} y={a.cy - CELL / 2 + 11.5} textAnchor="middle" fontSize={10} fontWeight={700} fontFamily="var(--font-mono)" fill="#0B1220" pointerEvents="none">{label}</text>
@@ -407,12 +437,28 @@ function SearchGraph({ g, def, view, name, skin }: { g: Graph; def: FloorDef; vi
                 ) : (
                   <>
                     <circle cx={a.cx} cy={a.cy} r={CELL * 0.3} fill={fill(n)} opacity={visited ? 1 : 0.35}
-                            stroke={next ? "#FBBF24" : visited ? "#F8FAFC" : "none"} strokeWidth={next ? 3 : 1}>
-                      <title>{tip}</title>
-                    </circle>
+                            stroke={next ? "#FBBF24" : visited ? "#F8FAFC" : "none"} strokeWidth={next ? 3 : 1} />
                     <text x={a.cx} y={a.cy + 3.5} textAnchor="middle" fontSize={11} fontWeight={700} fontFamily="var(--font-mono)" fill="#0B1220" pointerEvents="none">{label}</text>
                   </>
                 )}
+                {tiles_.map((p, i) => {
+                  const t = def.grid[p.x]?.[p.y];
+                  const mon = n.id !== 0 ? g.monsterMap.get(t) : undefined;
+                  const cost = mon ? javaDamage(hero, mon) : null;
+                  const lost = cost != null && cost >= 999999999;
+                  const win = cost != null && !lost && cost < hero.hp;
+                  const mtip = mon ? `\n${def.monsters[t]?.name ?? "monster"}: HP ${mon.hp}  ATK ${mon.atk}  DEF ${mon.def}  gold ${mon.money}\n${lost ? "cannot be beaten at the hero's ATK" : `costs ${cost} HP to kill now`}` : "";
+                  const x0 = p.y * CELL, y0 = p.x * CELL;
+                  return (
+                    <g key={`t${i}`}>
+                      {mon && !visited && cost != null && CELL >= 24 && (
+                        <text x={x0 + 3} y={y0 + CELL - 3} fontSize={Math.max(9, Math.round(CELL * 0.3))} fontWeight={700} fontFamily="var(--font-mono)"
+                              fill={win ? "#86EFAC" : "#FCA5A5"} stroke="#000" strokeWidth={2.5} paintOrder="stroke" pointerEvents="none">{lost ? "!" : cost}</text>
+                      )}
+                      <rect x={x0} y={y0} width={CELL} height={CELL} fill="transparent"><title>{`${tip}${mtip}`}</title></rect>
+                    </g>
+                  );
+                })}
               </g>
             );
           })}
@@ -426,7 +472,8 @@ function SearchGraph({ g, def, view, name, skin }: { g: Graph; def: FloorDef; vi
         Items next to each other are merged into one node (dashed lines), as are chains of monsters and doors with nothing else attached.
         Lines join nodes the hero can walk between. Numbers give the order of the decisions in the state shown ({tiles ? "the hero marks the start" : "@ = start"}; items picked up
         on the way are not numbered): the state just taken from the queue, and once the search ends the best state. Gold ring: the nodes it
-        can take next. Hover a node for its name.
+        can take next. The number on a monster is the HP it costs to kill at the hero's current stats (green: affordable, red: not, !: cannot
+        be beaten). Hover a tile for its node and monster stats.
       </p>
     </Widget>
   );

@@ -19,7 +19,7 @@ export default function PlayPage() {
           decision that lost an episode.
         </p>
         <p className="text-[14px]">
-          The full 24-floor tower is playable in the <Link className="link" href="/tower/#play">original game</Link>, with an English guide to its controls.
+          The full 24-floor tower is playable in the <Link className="link" href="/game/#play">original game</Link>, with an English guide to its controls.
         </p>
       </section>
       <div className="card-grid">

@@ -48,7 +48,7 @@ export const NAV: { group: string | null; items: NavItem[] }[] = [
   ] },
   { group: "Play", items: [
     { href: "/play/", label: "Play", icon: "gamepad", ready: true },
-    { href: "/tower/", label: "Tower Game", icon: "tower", ready: true },
+    { href: "/game/", label: "Tower Game", icon: "tower", ready: true },
   ] },
   { group: null, items: [{ href: "/about/", label: "About", icon: "info", ready: true }] },
 ];

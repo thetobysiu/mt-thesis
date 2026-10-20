@@ -171,28 +171,33 @@ function Viewer({ run, log, id, floor }: { run: RunState; log: RunLog; id: strin
                   </select>
                   <MapSkinSelect skin={skin} setSkin={setSkin} />
                 </>}>
-          <div className="flex-1 min-h-[280px]">
+          <div className="map-box flex-1 min-h-[280px]">
             <FloorMap map={viewFloor ? run.maps[viewFloor] : null} hero={onHeroFloor ? mapHero : null} stats={mapHero} removed={removed}
                       target={onHeroFloor ? snap?.target ?? null : null} path={onHeroFloor ? snap?.path ?? null : null}
                       focus={focus} fit minCell={12} maxCell={64} enemyMetric={enemyMetric} skin={skin} />
           </div>
           {floor && <ValueStrip values={valueData.values} status={valueData.status}
                                 turnOf={(i) => run.snapshots[Math.min(i, last)]?.turn ?? 0} idx={idx} onSeek={seek} />}
-          <div className="flex flex-wrap items-center gap-1 shrink-0" data-testid="transport">
-            <button className="btn btn-sm" onClick={() => seek(0)} title="Start (Home)" aria-label="start"><IconSkipStart /></button>
-            <button className="btn btn-sm" onClick={() => seek(idx - 1)} title="Previous turn (←)" aria-label="previous turn"><IconPrev /></button>
-            <button className="btn btn-sm btn-primary" onClick={() => setPlaying((v) => !v)} title="Play (Space)" aria-label={playing ? "pause" : "play"}>
-              {playing ? <IconPause /> : <IconPlay />}
-            </button>
-            <button className="btn btn-sm" onClick={() => seek(idx + 1)} title="Next turn (→)" aria-label="next turn"><IconNext /></button>
-            <button className="btn btn-sm" onClick={() => seek(last)} title="End (End)" aria-label="end"><IconSkipEnd /></button>
-            <span className="w-2" />
-            <button className="btn btn-sm" onClick={() => jumpDecision(-1)} title="Previous model decision (Shift+←)">← decision</button>
-            <button className="btn btn-sm" onClick={() => jumpDecision(1)} title="Next model decision (Shift+→)">decision →</button>
-            <input type="range" min={0} max={last} value={idx} onChange={(e) => seek(Number(e.target.value))} className="flex-1 min-w-[140px] mx-2" aria-label="turn" />
-            <select className="input" value={speed} onChange={(e) => setSpeed(Number(e.target.value))} aria-label="replay speed">
-              {[1, 2, 4, 8].map((s) => <option key={s} value={s}>{s} turn/s</option>)}
-            </select>
+          <div className="flex flex-col gap-2 shrink-0" data-testid="transport">
+            <input type="range" min={0} max={last} value={idx} onChange={(e) => seek(Number(e.target.value))} className="w-full" aria-label="turn" />
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+              <div className="flex items-center gap-1" role="group" aria-label="turn controls">
+                <button className="btn btn-sm" onClick={() => seek(0)} title="Start (Home)" aria-label="start"><IconSkipStart /></button>
+                <button className="btn btn-sm" onClick={() => seek(idx - 1)} title="Previous turn (←)" aria-label="previous turn"><IconPrev /></button>
+                <button className="btn btn-sm btn-primary" onClick={() => setPlaying((v) => !v)} title="Play (Space)" aria-label={playing ? "pause" : "play"}>
+                  {playing ? <IconPause /> : <IconPlay />}
+                </button>
+                <button className="btn btn-sm" onClick={() => seek(idx + 1)} title="Next turn (→)" aria-label="next turn"><IconNext /></button>
+                <button className="btn btn-sm" onClick={() => seek(last)} title="End (End)" aria-label="end"><IconSkipEnd /></button>
+              </div>
+              <div className="flex items-center gap-1" role="group" aria-label="decision controls">
+                <button className="btn btn-sm" onClick={() => jumpDecision(-1)} title="Previous model decision (Shift+←)">← decision</button>
+                <button className="btn btn-sm" onClick={() => jumpDecision(1)} title="Next model decision (Shift+→)">decision →</button>
+              </div>
+              <select className="input ml-auto" value={speed} onChange={(e) => setSpeed(Number(e.target.value))} aria-label="replay speed">
+                {[1, 2, 4, 8].map((s) => <option key={s} value={s}>{s} turn/s</option>)}
+              </select>
+            </div>
           </div>
           <div className="flex flex-wrap items-center gap-2 shrink-0">
             <MapLegend enemyMetric={enemyMetric} skin={skin} />

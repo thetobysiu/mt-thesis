@@ -9,7 +9,7 @@ const PAGES: [string, string][] = [
   ["/results/", "Results"], ["/episodes/", "Episodes"], ["/compare/", "Compare two episodes"], ["/floors/", "simple"],
   ["/floors/simple/", "leaves the optimal route here"], ["/floors/MT3/", "first turn here"], ["/solver/", "step by step"],
   ["/play/", "Play a floor"], ["/play/simple/", "Simple"],
-  ["/prompt-optimisation/", "The loop"], ["/prompt-optimisation/gs2_dsv4flash_bare/", "Candidate"], ["/tower/", "Tower Game"],
+  ["/prompt-optimisation/", "The loop"], ["/prompt-optimisation/gs2_dsv4flash_bare/", "Candidate"], ["/game/", "Tower Game"],
   ["/thesis/", "Cite"], ["/thesis/experiments/", "Table 6.5"], ["/glossary/", "Exact solver"], ["/about/", "Privacy notice"],
 ];
 const FILES = ["/game/24/", "/game/24/play/", "/game/24/en.js", "/game/24/main.js", "/thesis/thesis.pdf", "/data/episodes.json", "/data/index.json",

@@ -84,7 +84,7 @@ on every floor) from that copy and the stored tower logs.
 
 ```
 app/            pages (App Router): /, /tour, /journey, /results, /episodes, /compare, /floors, /solver, /play,
-                /prompt-optimisation, /tower, /thesis, /glossary, /about
+                /prompt-optimisation, /game, /thesis, /glossary, /about
 components/     FloorMap (copied from mt-ai-lab), EpisodeViewer, CompareView, SolverExplorer, Player, GepaRunView, tour/…
 lib/            run.ts (replay core), engine/ (TypeScript port of the engine), solver/ (exact solver, worker), gepa.ts,
                 thesis.ts (Markdown + KaTeX), data loaders

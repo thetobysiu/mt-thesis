@@ -30,7 +30,7 @@ export function TowerFloorView({ id }: { id: string }) {
           {visits.length ? `${visits.length} of the ${t.runs.length} tower runs cited by the thesis reached it.` : "No tower run cited by the thesis reached it."}
         </p>
         <div className="flex flex-wrap gap-2">
-          <Link className="btn btn-primary" href="/tower/">Play the Tower Game</Link>
+          <Link className="btn btn-primary" href="/game/">Play the Tower Game</Link>
           {prev && <Link className="btn" href={`/floors/${prev}/`}>← {prev}</Link>}
           {next && <Link className="btn" href={`/floors/${next}/`}>{next} →</Link>}
           <Link className="btn" href="/floors/#tower">All tower floors</Link>

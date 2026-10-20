@@ -186,17 +186,21 @@ function Loaded({ ea, eb, a, b, startTurn, valueFloor }: {
           )}
       </div>
 
-      <div className="toolbar flex flex-wrap items-center gap-2">
-        <button className="btn btn-sm" onClick={() => seek(idx - 1)} aria-label="previous turn" title="Previous turn (←)"><IconPrev /></button>
-        <span className="mono text-[13px] w-24 text-center">{idx === 0 ? "start" : `turn ${(a.run.snapshots[idx] ?? b.run.snapshots[idx])?.turn}`}</span>
-        <button className="btn btn-sm" onClick={() => seek(idx + 1)} aria-label="next turn" title="Next turn (→)"><IconNext /></button>
-        <input type="range" min={0} max={last} value={idx} onChange={(e) => seek(Number(e.target.value))} className="flex-1 min-w-[160px] mx-2" aria-label="turn" />
-        <div className="tabs" role="tablist" aria-label="decision text">
-          {(["observation", "reasoning", "answer"] as Tab[]).map((t) => (
-            <button key={t} role="tab" aria-selected={tab === t} className="btn btn-sm" onClick={() => setTab(t)}>{t}</button>
-          ))}
+      <div className="toolbar flex flex-col gap-2">
+        <input type="range" min={0} max={last} value={idx} onChange={(e) => seek(Number(e.target.value))} className="w-full" aria-label="turn" />
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <div className="flex items-center gap-1" role="group" aria-label="turn controls">
+            <button className="btn btn-sm" onClick={() => seek(idx - 1)} aria-label="previous turn" title="Previous turn (←)"><IconPrev /></button>
+            <span className="mono text-[13px] w-24 text-center">{idx === 0 ? "start" : `turn ${(a.run.snapshots[idx] ?? b.run.snapshots[idx])?.turn}`}</span>
+            <button className="btn btn-sm" onClick={() => seek(idx + 1)} aria-label="next turn" title="Next turn (→)"><IconNext /></button>
+          </div>
+          <div className="tabs" role="tablist" aria-label="decision text">
+            {(["observation", "reasoning", "answer"] as Tab[]).map((t) => (
+              <button key={t} role="tab" aria-selected={tab === t} className="btn btn-sm" onClick={() => setTab(t)}>{t}</button>
+            ))}
+          </div>
+          <span className="ml-auto"><MapSkinSelect skin={skin} setSkin={setSkin} /></span>
         </div>
-        <MapSkinSelect skin={skin} setSkin={setSkin} />
       </div>
 
       <div className="grid gap-[var(--gap)] lg:grid-cols-2">

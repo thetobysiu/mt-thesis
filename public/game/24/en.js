@@ -548,6 +548,25 @@
     patchData();
     hook();
     document.title = "24-Floor Magic Tower";
+    // muted until the player turns sound on (the choice is then remembered)
+    core.musicStatus.bgmStatus = core.getLocalStorage("bgmStatus", false);
+    core.musicStatus.soundStatus = core.getLocalStorage("soundStatus", false);
+    // the start music may already be playing: stop it, keeping lastBgm so the music button can resume it
+    if (!core.musicStatus.bgmStatus) {
+      var lastBgm = core.musicStatus.playingBgm || core.musicStatus.lastBgm;
+      core.control.pauseBgm();
+      core.musicStatus.lastBgm = lastBgm;
+    }
+    core.control.setMusicBtn();
+    // the project, game-page and download links, and the ending's leaderboard, point at files and pages of the original host that this copy does not have
+    ["_clickGameInfo_openProject", "_clickGameInfo_openComments", "_clickGameInfo_download"].forEach(function (name) {
+      core.actions[name] = function () { core.drawTip("Not available in this copy"); };
+    });
+    var askRate = core.events._gameOver_askRate;
+    core.events._gameOver_askRate = function (ending) {
+      if (ending != null && !core.status.extraEvent) { core.ui.closePanel(); core.restart(); return; }
+      return askRate.apply(this, arguments);
+    };
     if (core.dom.logoLabel) core.dom.logoLabel.innerText = core.firstData.title;
     // a restart (N, or after a defeat) skips the title screen too
     var show = core.control.showStartAnimate;

@@ -63,14 +63,16 @@ export function RoutePlayer({ id, text, solution }: { id: string; text: string; 
         <div className="h-[clamp(360px,70vh,720px)] shrink-0">
           <FloorMap map={map} hero={hero} removed={removed} path={step?.tiles.map((t) => [t.x, t.y]) ?? null} fit minCell={14} maxCell={60} />
         </div>
-        <div className="flex flex-wrap items-center gap-1">
-          <button className="btn btn-sm" onClick={() => { setPlaying(false); setIdx(0); }} aria-label="start"><IconSkipStart /></button>
-          <button className="btn btn-sm" onClick={() => { setPlaying(false); setIdx(Math.max(0, at - 1)); }} aria-label="previous step"><IconPrev /></button>
-          <button className="btn btn-sm btn-primary" onClick={() => setPlaying((v) => !v)} aria-label={playing ? "pause" : "play"}>{playing ? <IconPause /> : <IconPlay />}</button>
-          <button className="btn btn-sm" onClick={() => { setPlaying(false); setIdx(Math.min(last, at + 1)); }} aria-label="next step"><IconNext /></button>
-          <button className="btn btn-sm" onClick={() => { setPlaying(false); setIdx(last); }} aria-label="end"><IconSkipEnd /></button>
+        <div className="flex flex-col gap-2">
           <input type="range" min={0} max={Math.max(0, last)} value={at} onChange={(e) => { setPlaying(false); setIdx(Number(e.target.value)); }}
-                 className="flex-1 min-w-[140px] mx-2" aria-label="route step" />
+                 className="w-full" aria-label="route step" />
+          <div className="flex items-center gap-1" role="group" aria-label="step controls">
+            <button className="btn btn-sm" onClick={() => { setPlaying(false); setIdx(0); }} aria-label="start"><IconSkipStart /></button>
+            <button className="btn btn-sm" onClick={() => { setPlaying(false); setIdx(Math.max(0, at - 1)); }} aria-label="previous step"><IconPrev /></button>
+            <button className="btn btn-sm btn-primary" onClick={() => setPlaying((v) => !v)} aria-label={playing ? "pause" : "play"}>{playing ? <IconPause /> : <IconPlay />}</button>
+            <button className="btn btn-sm" onClick={() => { setPlaying(false); setIdx(Math.min(last, at + 1)); }} aria-label="next step"><IconNext /></button>
+            <button className="btn btn-sm" onClick={() => { setPlaying(false); setIdx(last); }} aria-label="end"><IconSkipEnd /></button>
+          </div>
         </div>
         <MapLegend />
       </Widget>
