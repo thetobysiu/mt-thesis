@@ -7,13 +7,13 @@ import { NAV, SECTION_LABELS, SITE } from "@/lib/site";
 import { TOUR } from "@/lib/tour";
 import {
   IconBook, IconChevronRight, IconCompare, IconCompass, IconDna, IconFile, IconGamepad, IconHome, IconInfo, IconMap, IconMenu,
-  IconPanel, IconReplay, IconRoute, IconTable, IconTarget, IconTower,
+  IconPanel, IconPlay, IconReplay, IconRoute, IconTable, IconTarget, IconTower,
 } from "./Icons";
 import { ThemeToggle } from "./ThemeToggle";
 
 const ICONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
   home: IconHome, compass: IconCompass, route: IconRoute, table: IconTable, replay: IconReplay, compare: IconCompare, map: IconMap, target: IconTarget,
-  dna: IconDna, tower: IconTower, gamepad: IconGamepad, book: IconBook, file: IconFile, info: IconInfo,
+  dna: IconDna, tower: IconTower, gamepad: IconGamepad, book: IconBook, file: IconFile, info: IconInfo, play: IconPlay, panel: IconPanel,
 };
 
 const RAIL_KEY = "mt-thesis-rail";

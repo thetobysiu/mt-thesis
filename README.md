@@ -7,6 +7,12 @@ The public companion site of the master's thesis
 A language model plays Magic Tower; a deterministic engine lists the legal actions with exact costs, the model
 chooses one, and an exact solver knows each floor's optimum. The site shows the evidence behind the thesis:
 
+- **The thesis in three minutes** (`/walkthrough/`): one animated, captioned story from the game to the tower with generated
+  music, chapters and pause-and-try moments that open a live demo on the same canvas; also as an MP4/WebM video on the
+  start page, with the captions (WebVTT) and the voice-over script.
+- **Presentation** (`/present/`): the defense deck as web slides with live demos (exact solver, the first decision, the
+  turn-9 annotation flip, every result cell opened at a real decision), keyboard and clicker control, overview, black
+  screen, fullscreen and a presenter window with notes, next slide and timer.
 - **Guided tour**: eleven short chapters from the game to the conclusion, each with something to try (the first decision
   of the simple floor as a question, the optimal route, the model's own input and reasoning, the exact solver, the result cells).
 - **Journey**: how the agent and its evaluation were developed, with the readings that later turned out wrong and the
@@ -40,6 +46,16 @@ npm run typecheck && npm run lint
 ```
 
 Node 20 or newer. `npm run smoke` checks the built `out/` (main pages, game files, every internal link).
+
+The walkthrough video is rendered from the page itself, frame by frame ([ADR 0004](docs/adr/0004-walkthrough-time-driven-scenes.md)).
+After changing a scene, re-render it locally (the two tools are not dependencies, so CI downloads nothing):
+
+```sh
+npm run build
+npm i --no-save playwright-core ffmpeg-static
+npm run capture      # Edge or Chrome, 1920 x 1080 at 30 fps -> public/walkthrough/{walkthrough.mp4,walkthrough.webm,poster.jpg}
+npm run capture -- --no-captions --channel chrome   # e.g. a clean picture for a recorded voice-over
+```
 
 ## Deploy
 

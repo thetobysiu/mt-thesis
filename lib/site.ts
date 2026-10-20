@@ -33,6 +33,8 @@ export const NAV: { group: string | null; items: NavItem[] }[] = [
     { href: "/glossary/", label: "Glossary", icon: "file", ready: true },
   ] },
   { group: "Story", items: [
+    { href: "/walkthrough/", label: "3-minute walkthrough", icon: "play", ready: true },
+    { href: "/present/", label: "Presentation", icon: "panel", ready: true },
     { href: "/tour/", label: "Guided tour", icon: "compass", ready: true },
     { href: "/journey/", label: "Journey", icon: "route", ready: true },
   ] },

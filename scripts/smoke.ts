@@ -11,9 +11,10 @@ const PAGES: [string, string][] = [
   ["/play/", "Play a floor"], ["/play/simple/", "Simple"],
   ["/prompt-optimisation/", "The loop"], ["/prompt-optimisation/gs2_dsv4flash_bare/", "Candidate"], ["/game/", "Tower Game"],
   ["/thesis/", "Cite"], ["/thesis/experiments/", "Table 6.5"], ["/glossary/", "Exact solver"], ["/about/", "Privacy notice"],
+  ["/walkthrough/", "The thesis in three minutes"], ["/present/", "Defense presentation"],
 ];
 const FILES = ["/game/24/", "/game/24/play/", "/game/24/en.js", "/game/24/main.js", "/thesis/thesis.pdf", "/data/episodes.json", "/data/index.json",
-               "/robots.txt", "/sitemap.xml"];
+               "/robots.txt", "/sitemap.xml", "/walkthrough/captions.vtt", "/walkthrough/voiceover.txt"];
 
 const fileFor = (url: string) => {
   const p = decodeURIComponent(url.split(/[?#]/)[0]);

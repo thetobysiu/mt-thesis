@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { IconBook, IconChevronRight, IconCompare, IconCompass, IconDna, IconGamepad, IconReplay, IconRoute, IconTable, IconTarget, IconTower } from "@/components/Icons";
+import fs from "node:fs";
+import path from "node:path";
+import { IconBook, IconChevronRight, IconCompare, IconCompass, IconDna, IconGamepad, IconPanel, IconPlay, IconReplay, IconRoute, IconTable, IconTarget, IconTower } from "@/components/Icons";
 import { getCell, getEpisode, getEpisodes, getResults } from "@/lib/data";
 import { SITE } from "@/lib/site";
 
@@ -38,6 +40,7 @@ export default function Home() {
   ];
   const featured = FEATURED.map((f) => ({ ...f, href: episodeLink(f.cell, f.run, f.turn) })).filter((f) => f.href);
   const firstDecision = featured[0]?.href;
+  const video = fs.existsSync(path.join(process.cwd(), "public", "walkthrough", "walkthrough.mp4"));
 
   return (
     <div className="page">
@@ -52,11 +55,28 @@ export default function Home() {
           the first experiments to the final configuration.
         </p>
         <div className="flex flex-wrap gap-2">
-          <Link className="btn btn-primary" href="/tour/"><IconCompass aria-hidden="true" />Take the guided tour</Link>
+          <Link className="btn btn-primary" href="/walkthrough/"><IconPlay aria-hidden="true" />Watch the 3-minute walkthrough</Link>
+          <Link className="btn" href="/tour/"><IconCompass aria-hidden="true" />Take the guided tour</Link>
+          <Link className="btn" href="/present/"><IconPanel aria-hidden="true" />Open the presentation</Link>
           {firstDecision && <Link className="btn" href={firstDecision}><IconReplay aria-hidden="true" />Start with the first decision</Link>}
           <Link className="btn" href="/results/"><IconTable aria-hidden="true" />Browse the results</Link>
         </div>
       </section>
+
+      {video && (
+        <section className="flex flex-col gap-3" aria-labelledby="video">
+          <h2 id="video">The thesis in three minutes</h2>
+          <video className="w-full max-w-[960px] rounded-[var(--radius)] border border-[var(--border-soft)] bg-black" controls preload="none"
+                 poster="/walkthrough/poster.jpg" aria-describedby="video-note">
+            <source src="/walkthrough/walkthrough.webm" type="video/webm" />
+            <source src="/walkthrough/walkthrough.mp4" type="video/mp4" />
+          </video>
+          <p id="video-note" className="muted text-[14px] m-0">
+            Captions are in the picture. The <Link className="link" href="/walkthrough/">interactive version</Link> pauses at each demo so you can try it,
+            and links the captions file and the voice-over script.
+          </p>
+        </section>
+      )}
 
       <section className="flex flex-col gap-3" aria-labelledby="findings">
         <h2 id="findings">Main findings</h2>
@@ -89,6 +109,8 @@ export default function Home() {
         <h2 id="evidence">Explore</h2>
         <div className="card-grid">
           {[
+            { href: "/walkthrough/", icon: IconPlay, title: "The thesis in three minutes", text: "One animated story from the game to the tower, with demos to pause and try; also as a video.", go: "watch the walkthrough" },
+            { href: "/present/", icon: IconPanel, title: "Presentation", text: "The defense slides with live demos: the exact solver, real decisions with the model's reasoning, every result cell.", go: "open the slides" },
             { href: "/tour/", icon: IconCompass, title: "Guided tour", text: "Eleven short chapters from the game to the conclusion, each with something to try.", go: "start the tour" },
             { href: "/journey/", icon: IconRoute, title: "Journey", text: "From single scored episodes to the final configuration, with the readings that did not survive.", go: "26 milestones" },
             { href: "/results/", icon: IconTable, title: "Results", text: `${r.cells.filter((c) => c.thesis).length} cells behind the thesis tables, each with its settings, episodes and the command that re-runs it.`, go: "browse by thesis table" },
